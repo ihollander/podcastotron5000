@@ -16,7 +16,6 @@ const EpisodeItem = ({
   onAddToPlaylistClick,
   onRemoveFromPlaylistClick
 }) => {
-
   // Event handlers
   const onPlayClick = () => {
     playlists.length

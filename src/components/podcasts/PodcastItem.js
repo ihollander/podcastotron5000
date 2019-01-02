@@ -16,7 +16,6 @@ class PodcastItem extends React.Component {
   onSubscribeClick = () => this.props.onSubscribeClick(this.props.podcast.id);
 
   onUnsubscribeClick = () => {
-    console.log(this.props.podcast);
     this.props.onUnsubscribeClick(
       this.props.podcast.id,
       this.props.podcast.subscriptions[0].id

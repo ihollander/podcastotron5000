@@ -26,8 +26,8 @@ class PodcastContainer extends React.Component {
 
   onAddToPlaylistClick = episodeId => this.props.createPlaylist(episodeId);
 
-  onRemoveFromPlaylistClick = playlistId =>
-    this.props.removePlaylist(playlistId);
+  onRemoveFromPlaylistClick = (episodeId, playlistId) =>
+    this.props.removePlaylist(episodeId, playlistId);
 
   onEpisodePlayClick = episodeId => this.props.updateNowPlaying(episodeId);
 
@@ -85,6 +85,7 @@ const mapStateToProps = state => {
         return arr;
       }, [])
     : [];
+    
   return {
     selectedPodcast: mappedSelectedPodcast,
     loading,

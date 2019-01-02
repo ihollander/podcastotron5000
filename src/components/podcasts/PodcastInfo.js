@@ -19,7 +19,7 @@ const PodcastInfo = ({
   };
 
   const onUnsubscribeButtonClick = () => {
-    onUnsubscribeClick(id, subscriptions[0].id);
+    onUnsubscribeClick(id, subscriptions[0].subscriptions[0].id);
   };
 
   const renderSubscribe = () => {
