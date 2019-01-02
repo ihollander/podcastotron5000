@@ -1,0 +1,91 @@
+.audioControls {
+  width: 50%;
+}
+
+.playerControls {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-end;
+	width: 100%;
+}
+
+.playerControls i {
+  margin: 0 6px;
+  font-size: 20px;
+  cursor: pointer;
+  opacity: 1;
+  transition: opacity .3s ease-out;
+  -moz-transition: opacity .3s ease-out;
+  -webkit-transition: opacity .3s ease-out;
+  -o-transition: opacity .3s ease-out;
+}
+
+.playerControls i:hover {
+  opacity: 0.7;
+}
+
+.playerControls i.play,
+.playerControls i.pause {
+  font-size: 34px;
+}
+
+.playbackBar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px;
+}
+
+.progressTime {
+  line-height: 16px;
+  min-width: 40px;
+  text-align: center;
+  width: 10%;
+}
+
+.progressBar {
+  height: 25px;
+  position: relative;
+  width: 80%;
+}
+
+.progressBar input {
+  width: 100%;
+  height: 6px;
+  border-radius: 2px;
+  /* background: linear-gradient(
+    to right,
+    #3498db 0%,
+    #9b59b6 72%
+  ); W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+.progressBar input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  opacity: 0;
+  transition: opacity .1s ease-out;
+  -moz-transition: opacity .1s ease-out;
+  -webkit-transition: opacity .1s ease-out;
+  -o-transition: opacity .1s ease-out;
+}
+
+.progressBar:hover input::-webkit-slider-thumb {
+  height: 18px;
+  width: 8px;
+  border-radius: 2px;
+  background: #000;
+  cursor: pointer;
+  opacity: 1;
+}
+
+.progressBar input:focus {
+  outline: none;
+}

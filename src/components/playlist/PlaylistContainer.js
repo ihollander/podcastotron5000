@@ -1,28 +1,28 @@
-import React from 'react'
-import { connect } from 'react-redux'
+import React from "react";
+import { connect } from "react-redux";
 
-import AudioPlayer from './AudioPlayer'
+import { playlistActions } from "../../actions/playlistActions";
+import LoadingSpinner from "../LoadingSpinner";
+import PlaylistList from "./PlaylistList";
 
 class PlaylistContainer extends React.Component {
-  
-  componentWillUnmount() {
-    console.log('PlaylistContainer componentWillUnmount')
+  componentDidMount() {
+    this.props.getPlaylists();
   }
 
   render() {
-    if (!this.props.currentlyPlaying) return null
+    if (this.props.loading) return <LoadingSpinner />;
 
-    const { currentlyPlaying: { audioLink, audioType } } = this.props
-    return (
-      <AudioPlayer audioLink={audioLink} audioType={audioType} />
-    )
+    return <PlaylistList queue={this.props.queue} />;
   }
 }
 
 const mapStateToProps = state => {
-  return {
-    currentlyPlaying: state.playlist.currentlyPlaying
-  }
-}
+  const { loading, queue } = state.playlist;
+  return { loading, queue };
+};
 
-export default connect(mapStateToProps)(PlaylistContainer)
+export default connect(
+  mapStateToProps,
+  { getPlaylists: playlistActions.getAll }
+)(PlaylistContainer);

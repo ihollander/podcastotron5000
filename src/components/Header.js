@@ -12,6 +12,7 @@ const Header = () => {
       <Container>
         <NavLink exact to="/" className="item">Subscriptions</NavLink>
         <NavLink exact to="/recent" className="item">Recent Episodes</NavLink>
+        <NavLink exact to="/playlist" className="item">Playlist</NavLink>
         <Menu.Item>
           <SearchBar />
         </Menu.Item>

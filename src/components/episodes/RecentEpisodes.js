@@ -1,12 +1,22 @@
-import React from 'react'
+import React from "react";
 
-import EpisodeList from './EpisodeList'
+import EpisodeList from "./EpisodeList";
 
-const RecentEpisodes = ({ onEpisodePlayClick, episodes }) => (
+const RecentEpisodes = ({
+  onAddToPlaylistClick,
+  onRemoveFromPlaylistClick,
+  onEpisodePlayClick,
+  episodes
+}) => (
   <>
     <h1>Recent Episodes</h1>
-    <EpisodeList onEpisodePlayClick={onEpisodePlayClick} episodes={episodes} />
+    <EpisodeList
+      onAddToPlaylistClick={onAddToPlaylistClick}
+      onRemoveFromPlaylistClick={onRemoveFromPlaylistClick}
+      onEpisodePlayClick={onEpisodePlayClick}
+      episodes={episodes}
+    />
   </>
-)
+);
 
-export default RecentEpisodes
+export default RecentEpisodes;

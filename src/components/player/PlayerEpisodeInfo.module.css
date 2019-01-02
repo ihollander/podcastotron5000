@@ -1,0 +1,22 @@
+.playerEpisode {
+  width: 25%;
+  height: 80px;
+}
+
+.playerEpisode img {
+  width: 80px;
+  height: 80px;
+  margin: 0 10px;
+}
+
+.episodeInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
+
+.episodeTitle {
+  font-weight: bold;
+  font-size: 1.1em
+}

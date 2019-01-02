@@ -1,14 +1,15 @@
 import React from 'react'
-import { Container, Segment } from 'semantic-ui-react'
+import { Segment } from 'semantic-ui-react'
 
-import PlaylistContainer from './playlist/PlaylistContainer'
+import styles from './Footer.module.css'
+import PlayerContainer from './player/PlayerContainer'
 
 const Footer = () => {
   return (
     <Segment basic className="footer">
-      <Container>
-        <PlaylistContainer />
-      </Container>
+      <div className={styles.playerContainer}>
+        <PlayerContainer />
+      </div>
     </Segment>
   )
 }
