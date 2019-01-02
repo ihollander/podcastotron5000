@@ -12,29 +12,29 @@ import EpisodeList from "../episodes/EpisodeList";
 import LoadingSpinner from "../LoadingSpinner";
 
 class PodcastContainer extends React.Component {
+  // Lifecycle Methods
   componentDidMount() {
     const { id } = this.props.match.params;
     this.props.fetchPodcast(id);
   }
 
+  // Event Handlers
   onSubscribeClick = podcastId => this.props.createSubscription(podcastId);
+
   onUnsubscribeClick = (podcastId, subscriptionId) =>
     this.props.removeSubscription(podcastId, subscriptionId);
 
   onAddToPlaylistClick = episodeId => this.props.createPlaylist(episodeId);
+
   onRemoveFromPlaylistClick = playlistId =>
     this.props.removePlaylist(playlistId);
 
   onEpisodePlayClick = episodeId => this.props.updateNowPlaying(episodeId);
 
   render() {
-    const { selectedPodcast, loading } = this.props;
+    const { selectedPodcast, loading, episodes } = this.props;
     if (loading || !selectedPodcast) return <LoadingSpinner />;
 
-    const episodes = selectedPodcast.episodes.map(e => ({
-      ...e,
-      podcast: selectedPodcast
-    }));
     return (
       <>
         <PodcastInfo
@@ -55,9 +55,40 @@ class PodcastContainer extends React.Component {
 
 const mapStateToProps = state => {
   const { selectedPodcast, loading } = state.podcast;
+  const { queue } = state.playlist;
+  const { podcasts: subscriptions } = state.subscriptions;
+
+  let selectedPodcastSubscriptions = [];
+  if (selectedPodcast) {
+    const matchSubscription = subscriptions.find(
+      s => s.id === selectedPodcast.id
+    );
+    if (matchSubscription) {
+      selectedPodcastSubscriptions = [matchSubscription];
+    }
+  }
+
+  const mappedSelectedPodcast = {
+    ...selectedPodcast,
+    subscriptions: selectedPodcastSubscriptions
+  };
+
+  const episodes = selectedPodcast
+    ? selectedPodcast.episodes.reduce((arr, episode) => {
+        const playlist = queue.find(p => p.episode_id === episode.id);
+        const playlists = playlist ? [playlist] : [];
+        arr.push({
+          ...episode,
+          playlists: playlists,
+          podcast: selectedPodcast
+        });
+        return arr;
+      }, [])
+    : [];
   return {
-    selectedPodcast,
-    loading
+    selectedPodcast: mappedSelectedPodcast,
+    loading,
+    episodes
   };
 };
 

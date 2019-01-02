@@ -1,35 +1,63 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { Card, Image, Dimmer, Button, Label } from 'semantic-ui-react'
+import React from "react";
+import { Link } from "react-router-dom";
+import { Card, Image, Dimmer, Button, Label } from "semantic-ui-react";
 
 class PodcastItem extends React.Component {
   state = {
     active: false
-  }
+  };
 
-  handleShow = () => this.setState({ active: true })
-  handleHide = () => this.setState({ active: false })
+  // UI Event Handlers
+  handleShow = () => this.setState({ active: true });
 
-  onSubscribeClick = () => this.props.onSubscribeClick(this.props.podcast.id)
-  onUnsubscribeClick = () => this.props.onUnsubscribeClick(this.props.podcast.id, this.props.podcast.subscriptions[0].id)
+  handleHide = () => this.setState({ active: false });
 
+  // Event Handlers
+  onSubscribeClick = () => this.props.onSubscribeClick(this.props.podcast.id);
+
+  onUnsubscribeClick = () => {
+    console.log(this.props.podcast);
+    this.props.onUnsubscribeClick(
+      this.props.podcast.id,
+      this.props.podcast.subscriptions[0].id
+    );
+  };
+
+  // Render
   renderDimmerContent() {
-    const { subscribing, slug, subscriptions } = this.props.podcast
+    const { subscribing, slug, subscriptions } = this.props.podcast;
     return (
       <>
-        {subscriptions.length 
-          ? <Button loading={subscribing} onClick={this.onUnsubscribeClick} color="red">Unsubscribe</Button>
-          : <Button loading={subscribing} onClick={this.onSubscribeClick} primary>Subscribe</Button>
-        }
-        <Link to={`/podcasts/${slug}`} className="ui secondary button">Episodes</Link>
+        {subscriptions.length ? (
+          <Button
+            loading={subscribing}
+            onClick={this.onUnsubscribeClick}
+            color="red"
+          >
+            Unsubscribe
+          </Button>
+        ) : (
+          <Button loading={subscribing} onClick={this.onSubscribeClick} primary>
+            Subscribe
+          </Button>
+        )}
+        <Link to={`/podcasts/${slug}`} className="ui secondary button">
+          Episodes
+        </Link>
       </>
-    )
+    );
   }
 
   render() {
-    const { name, artworkUrl600, genres, artistName, trackCount } = this.props.podcast
-    const { active } = this.state
-    const content = this.renderDimmerContent()
+    const {
+      name,
+      artworkUrl600,
+      genres,
+      artistName,
+      trackCount
+    } = this.props.podcast;
+    const { active } = this.state;
+    const content = this.renderDimmerContent();
 
     return (
       <Card>
@@ -41,13 +69,11 @@ class PodcastItem extends React.Component {
           onMouseEnter={this.handleShow}
           onMouseLeave={this.handleHide}
           src={artworkUrl600}
-          alt={name}>
-        </Dimmer.Dimmable>
+          alt={name}
+        />
         <Card.Content>
           <Card.Header>{name}</Card.Header>
-          <Card.Meta>
-            {artistName}
-          </Card.Meta>
+          <Card.Meta>{artistName}</Card.Meta>
         </Card.Content>
         <Card.Content extra>
           <span className="right floated">
@@ -58,8 +84,8 @@ class PodcastItem extends React.Component {
           </span>
         </Card.Content>
       </Card>
-    )
+    );
   }
 }
 
-export default PodcastItem
+export default PodcastItem;

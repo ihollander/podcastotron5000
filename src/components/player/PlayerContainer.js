@@ -18,20 +18,28 @@ const INITIAL_PLAYER_STATE = {
 class PlayerContainer extends React.Component {
   state = INITIAL_PLAYER_STATE;
 
+  // Lifecycle Methods
   componentDidMount() {
-    this.props.getPlaylist()
+    this.props.getPlaylist();
   }
 
   componentWillUnmount() {
     console.log("PlayerContainer componentWillUnmount");
   }
 
+  // Event Handlers
   onAudioPlay = () => this.setState({ playing: true });
+
   onAudioPause = () => this.setState({ playing: false });
 
   onAudioEnded = () => {
+    console.log('audioEnded')
     this.setState({ playing: false }, () => {
-      this.props.currentTrackEnded();
+      this.props.currentTrackEnded(); // remove now playing
+      if (this.props.queue.length) {
+        const nextEpisode = this.props.queue[0]
+        this.props.updateNowPlaying(nextEpisode.episode_id, nextEpisode.id); // update to next
+      }
     });
   };
 
@@ -80,6 +88,10 @@ class PlayerContainer extends React.Component {
       : this.audioRef.audioEl.play();
   };
 
+  onStepForwardButtonClick = () => {
+    this.goToNextEpisode()
+  }
+
   onPlaybackSliderChange = e => {
     const playbackPosition = e.target.value;
     this.setState(
@@ -93,6 +105,17 @@ class PlayerContainer extends React.Component {
     );
   };
 
+  goToNextEpisode() {
+    this.setState({ playing: false }, () => {
+      this.props.currentTrackEnded(); // remove now playing
+      if (this.props.queue.length) {
+        const nextEpisode = this.props.queue[0]
+        this.props.updateNowPlaying(nextEpisode.episode_id, nextEpisode.id); // update to next
+      }
+    });
+  }
+
+  // Render helpers
   get percentPlayed() {
     return this.state.duration &&
       this.state.currentTime &&
@@ -164,15 +187,15 @@ class PlayerContainer extends React.Component {
 }
 
 const mapStateToProps = state => {
-  return {
-    currentlyPlaying: state.playlist.currentlyPlaying
-  };
+  const { queue, currentlyPlaying } = state.playlist;
+  return { queue, currentlyPlaying };
 };
 
 export default connect(
   mapStateToProps,
   {
     currentTrackEnded: playlistActions.currentTrackEnded,
-    getPlaylist: playlistActions.getAll
+    getPlaylist: playlistActions.getAll,
+    updateNowPlaying: playlistActions.updateNowPlaying
   }
 )(PlayerContainer);

@@ -2,9 +2,7 @@ import React from 'react'
 
 import styles from './PlaylistControl.module.css'
 
-const PlaylistControl = () => {
-  return <div className={styles.playlistControl}></div>
-  // React.createElement('div', null, { children: "PlaylistControl" })
-}
+// Nothing in here... yet?
+const PlaylistControl = () => <div className={styles.playlistControl}></div>
 
 export default PlaylistControl

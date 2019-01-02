@@ -14,7 +14,6 @@ export default (state = INITIAL_PODCAST_STATE, action) => {
       const loadingEpisodes = state.selectedPodcast.episodes.map(e =>
         e.id === action.payload ? { ...e, creatingPlaylist: true } : e
       );
-      console.log(action.payload);
       return state.selectedPodcast
         ? {
             ...state,

@@ -15,38 +15,38 @@ import EpisodeContainer from "./episodes/RecentEpisodesContainer";
 import PlaylistContainer from "./playlist/PlaylistContainer";
 import ScrollToTop from "./ScrollToTop";
 
-const App = props => {
+const App = ({ auth: { isSignedIn } }) => {
   return (
     <Router history={history}>
       <ScrollToTop>
         <Switch>
           <LoginLayoutRoute exact path="/login" component={LoginContainer} />
           <AuthenticatedLayoutRoute
-            isAuthenticated={props.auth.isSignedIn}
+            isAuthenticated={isSignedIn}
             exact
             path="/"
             component={SubscriptionContainer}
           />
           <AuthenticatedLayoutRoute
-            isAuthenticated={props.auth.isSignedIn}
+            isAuthenticated={isSignedIn}
             exact
             path="/recent"
             component={EpisodeContainer}
           />
           <AuthenticatedLayoutRoute
-            isAuthenticated={props.auth.isSignedIn}
+            isAuthenticated={isSignedIn}
             exact
             path="/playlist"
             component={PlaylistContainer}
           />
           <AuthenticatedLayoutRoute
-            isAuthenticated={props.auth.isSignedIn}
+            isAuthenticated={isSignedIn}
             exact
             path="/podcasts/:id"
             component={PodcastContainer}
           />
           <AuthenticatedLayoutRoute
-            isAuthenticated={props.auth.isSignedIn}
+            isAuthenticated={isSignedIn}
             exact
             path="/search/:term"
             component={SearchResultContainer}

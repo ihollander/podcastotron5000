@@ -1,26 +1,50 @@
-import React from 'react'
-import { Grid, Image, Header, Button, Divider } from 'semantic-ui-react'
+import React from "react";
+import { Grid, Image, Header, Button, Divider } from "semantic-ui-react";
 
-const PodcastInfo = ({ podcast: { id, name, artistName, artworkUrl600, description, subscriptions, subscribing }, onUnsubscribeClick, onSubscribeClick }) => {
-
+const PodcastInfo = ({
+  podcast: {
+    id,
+    name,
+    artistName,
+    artworkUrl600,
+    description,
+    subscriptions,
+    subscribing
+  },
+  onUnsubscribeClick,
+  onSubscribeClick
+}) => {
   const onSubscribeButtonClick = () => {
-    onSubscribeClick(id)
-  }
+    onSubscribeClick(id);
+  };
 
   const onUnsubscribeButtonClick = () => {
-    onUnsubscribeClick(id, subscriptions[0].id)
-  }
+    onUnsubscribeClick(id, subscriptions[0].id);
+  };
 
   const renderSubscribe = () => {
     return (
       <>
-        {subscriptions.length
-          ? <Button loading={subscribing} onClick={onUnsubscribeButtonClick} color="red">Unsubscribe</Button>
-          : <Button loading={subscribing} onClick={onSubscribeButtonClick} primary>Subscribe</Button>
-        }
+        {subscriptions.length ? (
+          <Button
+            loading={subscribing}
+            onClick={onUnsubscribeButtonClick}
+            color="red"
+          >
+            Unsubscribe
+          </Button>
+        ) : (
+          <Button
+            loading={subscribing}
+            onClick={onSubscribeButtonClick}
+            primary
+          >
+            Subscribe
+          </Button>
+        )}
       </>
-    )
-  }
+    );
+  };
 
   return (
     <>
@@ -39,7 +63,7 @@ const PodcastInfo = ({ podcast: { id, name, artistName, artworkUrl600, descripti
       </Grid>
       <Divider />
     </>
-  )
-}
+  );
+};
 
-export default PodcastInfo
+export default PodcastInfo;

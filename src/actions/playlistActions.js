@@ -1,23 +1,10 @@
 import types from "./types";
 import apiAdapter from "../apis/podcastApiAdapter";
 
-const currentTrackEnded = (episode_id, playlist_id) => {
-  return (dispatch, getState) => {
-    dispatch({
-      type: types.LOADING_CREATE_PLAYLIST,
-      payload: episode_id
-    });
-
-    const { id } = getState().auth.user
-    return apiAdapter
-      .removePlaylist(id, playlist_id)
-      .then(() => {
-        dispatch({
-          type: types.CURRENT_TRACK_ENDED,
-          payload: episode_id
-        });
-      })
-      .catch(console.error);
+const currentTrackEnded = episode_id => {
+  return {
+    type: types.CURRENT_TRACK_ENDED,
+    payload: episode_id
   };
 };
 
@@ -27,7 +14,7 @@ const getAll = () => {
       type: types.LOADING_FETCH_PLAYLISTS
     });
 
-    const { id } = getState().auth.user
+    const { id } = getState().auth.user;
     return apiAdapter
       .getPlaylists(id)
       .then(playlists => {
@@ -40,14 +27,14 @@ const getAll = () => {
   };
 };
 
-const create = (episode_id) => {
+const create = episode_id => {
   return (dispatch, getState) => {
     dispatch({
       type: types.LOADING_CREATE_PLAYLIST,
       payload: episode_id
     });
 
-    const { id } = getState().auth.user
+    const { id } = getState().auth.user;
     return apiAdapter
       .createPlaylist(id, { episode_id })
       .then(playlist => {
@@ -67,7 +54,7 @@ const remove = (episode_id, playlist_id) => {
       payload: episode_id
     });
 
-    const { id } = getState().auth.user
+    const { id } = getState().auth.user;
     return apiAdapter
       .removePlaylist(id, playlist_id)
       .then(() => {
@@ -81,12 +68,17 @@ const remove = (episode_id, playlist_id) => {
 };
 
 // fetch episode or retrieve from queue in state?
-const updateNowPlaying = (episode_id) => {
-  return dispatch => {
+const updateNowPlaying = (episode_id, playlist_id) => {
+  return (dispatch, getState) => {
     dispatch({
       type: types.LOADING_FETCH_EPISODE,
       payload: episode_id
     });
+
+    // if (playlist_id) {
+    //   const { id } = getState().auth.user;
+    //   apiAdapter.removePlaylist(id, playlist_id);
+    // }
 
     return apiAdapter
       .getEpisode(episode_id)
@@ -95,6 +87,17 @@ const updateNowPlaying = (episode_id) => {
           type: types.UPDATE_NOW_PLAYING,
           payload: episode
         });
+      })
+      .then(() => {
+        // remove from playlist if it's in there
+        if (playlist_id) {
+          apiAdapter.removePlaylist(episode_id, playlist_id).then(() => {
+            dispatch({
+              type: types.REMOVE_PLAYLIST,
+              payload: episode_id
+            });
+          });
+        }
       })
       .catch(console.error);
   };

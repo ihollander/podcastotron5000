@@ -9,16 +9,7 @@ const INITIAL_PLAYLIST_STATE = {
 export default (state = INITIAL_PLAYLIST_STATE, action) => {
   switch (action.type) {
     case types.CURRENT_TRACK_ENDED:
-      // set currentlyPlaying = next in queue
-      if (!state.queue.length) return { ...state, currentlyPlaying: null };
-
-      const nextEpisode = state.queue[0].episode; 
-      const updateQueue = state.queue.filter(e => e.id !== state.queue[0].id);
-      return {
-        ...state,
-        queue: updateQueue,
-        currentlyPlaying: nextEpisode
-      };
+      return { ...state, currentlyPlaying: null };
     case types.LOADING_FETCH_PLAYLISTS:
       return { ...state, loading: true };
     case types.FETCH_PLAYLISTS:
@@ -31,7 +22,10 @@ export default (state = INITIAL_PLAYLIST_STATE, action) => {
       );
       return { ...state, queue: removePlaylistsQueue };
     case types.UPDATE_NOW_PLAYING:
-      return { ...state, currentlyPlaying: action.payload };
+      const updatingQueue = state.queue.filter(
+        e => e.episode_id !== action.payload.id
+      );
+      return { ...state, currentlyPlaying: action.payload, queue: updatingQueue };
     default:
       return state;
   }

@@ -3,26 +3,57 @@ import { connect } from "react-redux";
 
 import { playlistActions } from "../../actions/playlistActions";
 import LoadingSpinner from "../LoadingSpinner";
+import Message from "../Message";
 import PlaylistList from "./PlaylistList";
+import NowPlaying from "./NowPlaying";
 
 class PlaylistContainer extends React.Component {
+  // Lifecycle Methods
   componentDidMount() {
     this.props.getPlaylists();
   }
 
-  render() {
-    if (this.props.loading) return <LoadingSpinner />;
+  // Event Handlers
+  onEpisodePlayClick = (episodeId, playlistId) =>
+    this.props.updateNowPlaying(episodeId, playlistId);
 
-    return <PlaylistList queue={this.props.queue} />;
+  onEpisodeRemoveClick = (episodeId, playlistId) =>
+    this.props.removePlaylist(episodeId, playlistId);
+
+  render() {
+    const { loading, queue, currentlyPlaying } = this.props;
+
+    if (loading) return <LoadingSpinner />;
+
+    return (
+      <>
+        {currentlyPlaying && <NowPlaying episode={currentlyPlaying} />}
+        {queue.length ? (
+          <PlaylistList
+            onEpisodePlayClick={this.onEpisodePlayClick}
+            onEpisodeRemoveClick={this.onEpisodeRemoveClick}
+            queue={queue}
+          />
+        ) : (
+          <Message header="Nothing in playlist">
+            Search podcasts or check recent episodes to add to playlist
+          </Message>
+        )}
+      </>
+    );
   }
 }
 
 const mapStateToProps = state => {
-  const { loading, queue } = state.playlist;
-  return { loading, queue };
+  const { loading, queue, currentlyPlaying } = state.playlist;
+  return { loading, queue, currentlyPlaying };
 };
 
 export default connect(
   mapStateToProps,
-  { getPlaylists: playlistActions.getAll }
+  {
+    getPlaylists: playlistActions.getAll,
+    updateNowPlaying: playlistActions.updateNowPlaying,
+    removePlaylist: playlistActions.remove
+  }
 )(PlaylistContainer);

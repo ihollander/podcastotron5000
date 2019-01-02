@@ -3,9 +3,11 @@ import { connect } from "react-redux";
 
 import { podcastActions, playlistActions } from "../../actions";
 import RecentEpisodes from "./RecentEpisodes";
+import Message from "../Message";
 import LoadingSpinner from "../LoadingSpinner";
 
 class RecentEpisodesContainer extends React.Component {
+  // Lifecycle Methods
   componentDidMount() {
     this.props.getRecentEpisodes(this.props.page);
     window.addEventListener("scroll", this.onScroll, false);
@@ -15,6 +17,7 @@ class RecentEpisodesContainer extends React.Component {
     window.removeEventListener("scroll", this.onScroll, false);
   }
 
+  // Event handlers
   onScroll = () => {
     if (
       window.innerHeight + window.pageYOffset >=
@@ -32,28 +35,47 @@ class RecentEpisodesContainer extends React.Component {
     this.props.removePlaylist(userId, playlistId);
   };
 
-  onEpisodePlayClick = episodeId => this.props.updateNowPlaying(episodeId);
+  onEpisodePlayClick = (episodeId, playlistId) =>
+    this.props.updateNowPlaying(episodeId, playlistId);
 
+  // Render
   render() {
     const { episodes, loading } = this.props;
 
-    return (
-      <>
-        <RecentEpisodes
-          onAddToPlaylistClick={this.onAddToPlaylistClick}
-          onRemoveFromPlaylistClick={this.onRemoveFromPlaylistClick}
-          onEpisodePlayClick={this.onEpisodePlayClick}
-          episodes={episodes}
-        />
-        {loading && <LoadingSpinner />}
-      </>
-    );
+    if (loading && !episodes.length) {
+      return <LoadingSpinner />;
+    } else if (!episodes.length) {
+      return (
+        <Message header="No subscriptions found">
+          Use the search bar to find episodes and subscribe
+        </Message>
+      );
+    } else {
+      return (
+        <>
+          <RecentEpisodes
+            onAddToPlaylistClick={this.onAddToPlaylistClick}
+            onRemoveFromPlaylistClick={this.onRemoveFromPlaylistClick}
+            onEpisodePlayClick={this.onEpisodePlayClick}
+            episodes={episodes}
+          />
+          {loading && <LoadingSpinner />}
+        </>
+      );
+    }
   }
 }
 
 const mapStateToProps = state => {
   const { episodes, page, lastPage, loading } = state.episodes;
-  return { episodes, page, lastPage, loading };
+  const { queue } = state.playlist;
+  const mappedEpisodes = episodes.reduce((arr, episode) => {
+    const playlist = queue.find(p => p.episode_id === episode.id);
+    const playlists = playlist ? [playlist] : [];
+    arr.push({ ...episode, playlists: playlists, creatingPlaylist: false });
+    return arr;
+  }, []);
+  return { episodes: mappedEpisodes, page, lastPage, loading };
 };
 
 export default connect(

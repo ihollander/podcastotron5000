@@ -1,21 +1,21 @@
-import React from 'react'
-import { Card } from 'semantic-ui-react'
+import React from "react";
+import { Card } from "semantic-ui-react";
 
-import PodcastItem from './PodcastItem'
+import PodcastItem from "./PodcastItem";
 
-const PodcastList = props => {
-
+const PodcastList = ({ podcasts, onUnsubscribeClick, onSubscribeClick }) => {
   return (
     <Card.Group itemsPerRow={3}>
-      {props.podcasts.map(podcast => 
-        <PodcastItem 
-          key={podcast.id} 
-          podcast={podcast} 
-          onUnsubscribeClick={props.onUnsubscribeClick} 
-          onSubscribeClick={props.onSubscribeClick} />
-      )}
+      {podcasts.map(podcast => (
+        <PodcastItem
+          key={podcast.id}
+          podcast={podcast}
+          onUnsubscribeClick={onUnsubscribeClick}
+          onSubscribeClick={onSubscribeClick}
+        />
+      ))}
     </Card.Group>
-  )
-}
+  );
+};
 
-export default PodcastList
+export default PodcastList;
