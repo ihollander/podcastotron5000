@@ -80,7 +80,7 @@ const remove = (episode_id, playlist_id) => {
   };
 };
 
-// fetch episode 
+// fetch episode or retrieve from queue in state?
 const updateNowPlaying = (episode_id) => {
   return dispatch => {
     dispatch({

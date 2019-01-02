@@ -38,18 +38,18 @@ const get = slug => {
   }
 }
 
-const getRecentEpisodes = () => {
+const getRecentEpisodes = page => {
   return (dispatch, getState) => {
     dispatch({
       type: types.LOADING_RECENT_EPISODES
     })
 
     const { id } = getState().auth.user
-    return apiAdapter.getRecentEpisodes(id)
-      .then(episodes => {
+    return apiAdapter.getRecentEpisodes(id, page)
+      .then(response => {
         dispatch({
           type: types.FETCH_RECENT_EPISODES,
-          payload: episodes
+          payload: response
         })
       })
       .catch(console.error)

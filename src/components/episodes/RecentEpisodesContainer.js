@@ -7,35 +7,53 @@ import LoadingSpinner from "../LoadingSpinner";
 
 class RecentEpisodesContainer extends React.Component {
   componentDidMount() {
-    this.props.getRecentEpisodes();
+    this.props.getRecentEpisodes(this.props.page);
+    window.addEventListener("scroll", this.onScroll, false);
   }
 
+  componentWillUnmount() {
+    window.removeEventListener("scroll", this.onScroll, false);
+  }
+
+  onScroll = () => {
+    if (
+      window.innerHeight + window.pageYOffset >=
+        document.body.scrollHeight - 200 &&
+      !this.props.lastPage &&
+      !this.props.loading
+    ) {
+      this.props.getRecentEpisodes(this.props.page);
+    }
+  };
+
   onAddToPlaylistClick = episodeId => this.props.createPlaylist(episodeId);
-  onRemoveFromPlaylistClick = (userId, playlistId) =>
+
+  onRemoveFromPlaylistClick = (userId, playlistId) => {
     this.props.removePlaylist(userId, playlistId);
+  };
 
   onEpisodePlayClick = episodeId => this.props.updateNowPlaying(episodeId);
 
   render() {
     const { episodes, loading } = this.props;
-    if (loading) return <LoadingSpinner />;
 
     return (
-      <RecentEpisodes
-        onAddToPlaylistClick={this.onAddToPlaylistClick}
-        onRemoveFromPlaylistClick={this.onRemoveFromPlaylistClick}
-        onEpisodePlayClick={this.onEpisodePlayClick}
-        episodes={episodes}
-      />
+      <>
+        <RecentEpisodes
+          onAddToPlaylistClick={this.onAddToPlaylistClick}
+          onRemoveFromPlaylistClick={this.onRemoveFromPlaylistClick}
+          onEpisodePlayClick={this.onEpisodePlayClick}
+          episodes={episodes}
+        />
+        {loading && <LoadingSpinner />}
+      </>
     );
   }
 }
 
 const mapStateToProps = state => {
-  return {
-    episodes: state.episodes.episodes,
-    loading: state.episodes.loading
-  };
+  const { episodes, page, lastPage, loading } = state.episodes;
+  return { episodes, page, lastPage, loading };
 };
 
 export default connect(

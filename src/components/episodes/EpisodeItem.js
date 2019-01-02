@@ -10,7 +10,7 @@ const EpisodeItem = ({
     description,
     playlists,
     creatingPlaylist,
-    podcast: { artworkUrl600 }
+    podcast
   },
   onEpisodePlayClick,
   onAddToPlaylistClick,
@@ -21,7 +21,7 @@ const EpisodeItem = ({
   const onRemoveClick = () => onRemoveFromPlaylistClick(id, playlists[0].id)
 
   const renderPlaylistButton = () => {
-    return playlists.length 
+    return playlists && playlists.length 
       ? <Button loading={creatingPlaylist} onClick={onRemoveClick} color="red">
         Remove From Playlist
       </Button>
@@ -32,7 +32,7 @@ const EpisodeItem = ({
 
   return (
     <Item>
-      <Item.Image size="small" src={artworkUrl600} floated="left" />
+      <Item.Image size="small" src={podcast && podcast.artworkUrl600} floated="left" />
       <Item.Content>
         <Item.Header>{title}</Item.Header>
         <Item.Meta>

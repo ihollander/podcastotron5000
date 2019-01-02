@@ -1,6 +1,8 @@
 import types from "../actions/types";
 
 const INITIAL_EPISODES_STATE = {
+  page: 1,
+  lastPage: false, // get last page from headers?
   episodes: [],
   loading: false
 };
@@ -46,7 +48,13 @@ export default (state = INITIAL_EPISODES_STATE, action) => {
     case types.LOADING_RECENT_EPISODES:
       return { ...state, loading: true };
     case types.FETCH_RECENT_EPISODES:
-      return { ...state, episodes: action.payload, loading: false };
+      return {
+        ...state,
+        episodes: [...state.episodes, ...action.payload],
+        loading: false,
+        lastPage: !action.payload.length,
+        page: state.page + 1
+      };
     default:
       return state;
   }

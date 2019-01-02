@@ -22,8 +22,8 @@ class PodcastAPIAdapter {
   }
 
   // GET /users/:user_id/podcasts/recent
-  getRecentEpisodes(userId) {
-    return this._fetch(`${this.baseUrl}/users/${userId}/podcasts/recent`, {
+  getRecentEpisodes(userId, page) {
+    return this._fetch(`${this.baseUrl}/users/${userId}/podcasts/recent?page=${page}`, {
       method: 'GET'
     })
   }
