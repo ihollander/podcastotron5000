@@ -9,14 +9,13 @@ const currentTrackEnded = episode_id => {
 };
 
 const getAll = () => {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     dispatch({
       type: types.LOADING_FETCH_PLAYLISTS
     });
 
-    const { id } = getState().auth.user;
     return apiAdapter
-      .getPlaylists(id)
+      .getPlaylists()
       .then(playlists => {
         dispatch({
           type: types.FETCH_PLAYLISTS,
@@ -28,15 +27,14 @@ const getAll = () => {
 };
 
 const create = episodeId => {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     dispatch({
       type: types.UPDATING_PLAYLIST,
       payload: episodeId
     });
 
-    const { id } = getState().auth.user;
     return apiAdapter
-      .createPlaylist(id, episodeId)
+      .createPlaylist(episodeId)
       .then(playlist => {
         dispatch({
           type: types.CREATED_PLAYLIST,
@@ -48,15 +46,14 @@ const create = episodeId => {
 };
 
 const remove = episodeId => {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     dispatch({
       type: types.UPDATING_PLAYLIST,
       payload: episodeId
     });
 
-    const { id } = getState().auth.user;
     return apiAdapter
-      .removePlaylist(id, episodeId)
+      .removePlaylist(episodeId)
       .then(() => {
         dispatch({
           type: types.REMOVED_PLAYLIST,
@@ -88,8 +85,7 @@ const updateNowPlaying = episodeId => {
         // remove from playlist if it's in there???
         const inPlaylist = getState().playlist.queue.some(e => e.id === episodeId)
         if (inPlaylist) {
-          const { id } = getState().auth.user;
-          apiAdapter.removePlaylist(id, episodeId).then(() => {
+          apiAdapter.removePlaylist(episodeId).then(() => {
             dispatch({
               type: types.REMOVED_PLAYLIST,
               payload: episodeId

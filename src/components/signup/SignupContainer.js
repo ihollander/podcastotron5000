@@ -5,18 +5,18 @@ import { Grid, Divider, Button, Segment } from "semantic-ui-react";
 import history from "../../history";
 import { authActions } from "../../actions";
 
-import LoginForm from "./LoginForm";
+import SignupForm from "./SignupForm";
 import LoadingSpinner from "../LoadingSpinner";
 import MessageDisplay from "../Message";
 
 // temp auth handling: this should be moved to server side
-class LoginContainer extends React.Component {
-  onSignUpClick = () => {
-    history.push("/signup");
+class SignUpContainer extends React.Component {
+  onLoginClick = () => {
+    history.push("/login");
   };
 
   onFormSubmit = formData => {
-    this.props.signIn(formData);
+    this.props.signUp(formData);
   };
 
   // Render
@@ -27,14 +27,14 @@ class LoginContainer extends React.Component {
         <Segment placeholder>
           <Grid columns={2} relaxed="very">
             <Grid.Column>
-              <LoginForm onFormSubmit={this.onFormSubmit} />
+              <SignupForm onFormSubmit={this.onFormSubmit} />
             </Grid.Column>
             <Grid.Column verticalAlign="middle">
               <Button
-                content="Sign up"
-                icon="signup"
+                content="Login"
+                icon="user"
                 size="big"
-                onClick={this.onSignUpClick}
+                onClick={this.onLoginClick}
               />
             </Grid.Column>
           </Grid>
@@ -59,6 +59,6 @@ const mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   {
-    signIn: authActions.signIn
+    signUp: authActions.signUp
   }
-)(LoginContainer);
+)(SignUpContainer);

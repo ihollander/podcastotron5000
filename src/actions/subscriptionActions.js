@@ -2,14 +2,13 @@ import types from './types'
 import apiAdapter from '../apis/podcastApiAdapter'
 
 const create = (podcast_id) => {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     dispatch({
       type: types.UPDATING_SUBSCRIPTION,
       payload: podcast_id
     })
 
-    const { id } = getState().auth.user
-    return apiAdapter.addSubscription(id, podcast_id)
+    return apiAdapter.addSubscription(podcast_id)
       .then(podcast => {
         dispatch({
           type: types.CREATED_SUBSCRIPTION,
@@ -21,14 +20,13 @@ const create = (podcast_id) => {
 }
 
 const remove = (podcast_id) => {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     dispatch({
       type: types.UPDATING_SUBSCRIPTION,
       payload: podcast_id
     })
 
-    const { id } = getState().auth.user
-    return apiAdapter.removeSubscription(id, podcast_id)
+    return apiAdapter.removeSubscription(podcast_id)
       .then(() => {
         dispatch({
           type: types.REMOVED_SUBSCRIPTION,
@@ -40,13 +38,12 @@ const remove = (podcast_id) => {
 }
 
 const getAll = () => {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     dispatch({
       type: types.LOADING_FETCH_SUBSCRIPTIONS
     })
 
-    const { id } = getState().auth.user
-    return apiAdapter.getSubscriptions(id)
+    return apiAdapter.getSubscriptions()
       .then(subscriptions => {
         dispatch({
           type: types.FETCH_SUBSCRIPTIONS,

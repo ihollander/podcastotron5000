@@ -2,27 +2,66 @@ import types from "./types";
 import apiAdapter from "../apis/podcastApiAdapter";
 import history from "../history";
 
-const signIn = googleUserId => {
+const signUp = formData => {
   return dispatch => {
     dispatch({
-      type: types.SIGN_IN,
-      payload: googleUserId
+      type: types.SIGNING_IN
     });
 
     return apiAdapter
-      .userCreate({ google_id: googleUserId })
+      .userCreate({ user: formData })
       .then(user => {
-        dispatch({
-          type: types.FETCH_USER,
-          payload: user
-        });
-        history.push("/");
+        if (user.jwt) {
+          //success!
+          localStorage.setItem("user", JSON.stringify(user));
+          dispatch({
+            type: types.SIGNED_IN,
+            payload: user
+          });
+          history.push("/");
+        }
       })
-      .catch(console.error);
+      .catch(error => error.json())
+      .then(errorJson => {
+        dispatch({
+          type: types.LOGIN_ERROR,
+          payload: errorJson
+        });
+      });
+  };
+};
+
+const signIn = formData => {
+  return dispatch => {
+    dispatch({
+      type: types.SIGNING_IN
+    });
+
+    return apiAdapter
+      .userSignIn({ user: formData })
+      .then(user => {
+        if (user.jwt) {
+          //success!
+          localStorage.setItem("user", JSON.stringify(user));
+          dispatch({
+            type: types.SIGNED_IN,
+            payload: user
+          });
+          history.push("/");
+        }
+      })
+      .catch(error => error.json())
+      .then(errorJson => {
+        dispatch({
+          type: types.LOGIN_ERROR,
+          payload: errorJson
+        });
+      });
   };
 };
 
 const signOut = () => {
+  localStorage.removeItem("user");
   return {
     type: types.SIGN_OUT
   };
@@ -30,5 +69,6 @@ const signOut = () => {
 
 export const authActions = {
   signIn,
-  signOut
+  signOut,
+  signUp
 };
