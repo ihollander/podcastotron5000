@@ -13,14 +13,13 @@ class SubscriptionContainer extends React.Component {
   }
 
   // Event Handlers
-  onUnsubscribeClick = (podcastId, subscriptionId) => {
-    this.props.removeSubscription(podcastId, subscriptionId);
-  };
+  onUnsubscribeClick = podcastId => this.props.removeSubscription(podcastId);
 
   render() {
-    if (this.props.loading) {
+    const { loading, podcasts } = this.props;
+    if (loading) {
       return <LoadingSpinner />;
-    } else if (!this.props.podcasts.length) {
+    } else if (!podcasts.length) {
       return (
         <Message header="No subscriptions found">
           Use the search bar to find episodes and subscribe
@@ -30,7 +29,7 @@ class SubscriptionContainer extends React.Component {
       return (
         <PodcastList
           onUnsubscribeClick={this.onUnsubscribeClick}
-          podcasts={this.props.podcasts}
+          podcasts={podcasts}
         />
       );
     }
@@ -38,8 +37,13 @@ class SubscriptionContainer extends React.Component {
 }
 
 const mapStateToProps = state => {
-  const { podcasts, loading } = state.subscriptions;
-  return { podcasts, loading };
+  const { podcasts, loading, currentlyUpdating } = state.subscriptions;
+  const mappedPodcasts = podcasts.map(p => ({
+    ...p,
+    subscribed: true,
+    currentlyUpdating: p.id === currentlyUpdating
+  }));
+  return { podcasts: mappedPodcasts, loading };
 };
 
 export default connect(

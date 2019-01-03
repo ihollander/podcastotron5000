@@ -15,28 +15,23 @@ class PodcastItem extends React.Component {
   // Event Handlers
   onSubscribeClick = () => this.props.onSubscribeClick(this.props.podcast.id);
 
-  onUnsubscribeClick = () => {
-    this.props.onUnsubscribeClick(
-      this.props.podcast.id,
-      this.props.podcast.subscriptions[0].id
-    );
-  };
+  onUnsubscribeClick = () => this.props.onUnsubscribeClick(this.props.podcast.id);
 
   // Render
   renderDimmerContent() {
-    const { subscribing, slug, subscriptions } = this.props.podcast;
+    const { currentlyUpdating, slug, subscribed } = this.props.podcast;
     return (
       <>
-        {subscriptions.length ? (
+        {subscribed ? (
           <Button
-            loading={subscribing}
+            loading={currentlyUpdating}
             onClick={this.onUnsubscribeClick}
             color="red"
           >
             Unsubscribe
           </Button>
         ) : (
-          <Button loading={subscribing} onClick={this.onSubscribeClick} primary>
+          <Button loading={currentlyUpdating} onClick={this.onSubscribeClick} primary>
             Subscribe
           </Button>
         )}

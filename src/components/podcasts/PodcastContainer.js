@@ -21,18 +21,16 @@ class PodcastContainer extends React.Component {
   // Event Handlers
   onSubscribeClick = podcastId => this.props.createSubscription(podcastId);
 
-  onUnsubscribeClick = (podcastId, subscriptionId) =>
-    this.props.removeSubscription(podcastId, subscriptionId);
+  onUnsubscribeClick = podcastId => this.props.removeSubscription(podcastId);
 
   onAddToPlaylistClick = episodeId => this.props.createPlaylist(episodeId);
 
-  onRemoveFromPlaylistClick = (episodeId, playlistId) =>
-    this.props.removePlaylist(episodeId, playlistId);
+  onRemoveFromPlaylistClick = episodeId => this.props.removePlaylist(episodeId);
 
   onEpisodePlayClick = episodeId => this.props.updateNowPlaying(episodeId);
 
   render() {
-    const { selectedPodcast, loading, episodes } = this.props;
+    const { selectedPodcast, loading } = this.props;
     if (loading || !selectedPodcast) return <LoadingSpinner />;
 
     return (
@@ -46,7 +44,7 @@ class PodcastContainer extends React.Component {
           onAddToPlaylistClick={this.onAddToPlaylistClick}
           onRemoveFromPlaylistClick={this.onRemoveFromPlaylistClick}
           onEpisodePlayClick={this.onEpisodePlayClick}
-          episodes={episodes}
+          episodes={selectedPodcast.episodes}
         />
       </>
     );
@@ -55,42 +53,34 @@ class PodcastContainer extends React.Component {
 
 const mapStateToProps = state => {
   const { selectedPodcast, loading } = state.podcast;
-  const { queue } = state.playlist;
-  const { podcasts: subscriptions } = state.subscriptions;
+  const { queue, currentlyUpdating } = state.playlist;
+  const { podcasts: subscriptions, currentlyUpdating: currentlyUpdatingSubscription } = state.subscriptions;
 
-  let selectedPodcastSubscriptions = [];
   if (selectedPodcast) {
-    const matchSubscription = subscriptions.find(
-      s => s.id === selectedPodcast.id
-    );
-    if (matchSubscription) {
-      selectedPodcastSubscriptions = [matchSubscription];
-    }
+    const subscribed = subscriptions.some(p => p.id === selectedPodcast.id);
+    const mappedEpisodes = selectedPodcast.episodes.reduce((arr, episode) => {
+      const inPlaylist = queue.some(e => e.id === episode.id);
+      const updatingPlaylist = currentlyUpdating === episode.id;
+      arr.push({ ...episode, inPlaylist, updatingPlaylist });
+      return arr;
+    }, []);
+
+    const mappedSelectedPodcast = {
+      ...selectedPodcast,
+      subscribed,
+      currentlyUpdating: currentlyUpdatingSubscription === selectedPodcast.id,
+      episodes: mappedEpisodes
+    };
+    return {
+      selectedPodcast: mappedSelectedPodcast,
+      loading
+    };
+  } else {
+    return {
+      selectedPodcast,
+      loading
+    };
   }
-
-  const mappedSelectedPodcast = {
-    ...selectedPodcast,
-    subscriptions: selectedPodcastSubscriptions
-  };
-
-  const episodes = selectedPodcast
-    ? selectedPodcast.episodes.reduce((arr, episode) => {
-        const playlist = queue.find(p => p.episode_id === episode.id);
-        const playlists = playlist ? [playlist] : [];
-        arr.push({
-          ...episode,
-          playlists: playlists,
-          podcast: selectedPodcast
-        });
-        return arr;
-      }, [])
-    : [];
-    
-  return {
-    selectedPodcast: mappedSelectedPodcast,
-    loading,
-    episodes
-  };
 };
 
 export default connect(

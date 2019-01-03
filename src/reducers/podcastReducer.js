@@ -8,6 +8,8 @@ const INITIAL_PODCAST_STATE = {
 
 export default (state = INITIAL_PODCAST_STATE, action) => {
   switch (action.type) {
+    case types.SIGN_OUT:
+      return INITIAL_PODCAST_STATE
     case types.LOADING_FETCH_PODCAST:
       return { ...state, loading: true };
     case types.FETCH_PODCAST:

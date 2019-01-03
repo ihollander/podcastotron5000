@@ -4,15 +4,15 @@ import apiAdapter from '../apis/podcastApiAdapter'
 const create = (podcast_id) => {
   return (dispatch, getState) => {
     dispatch({
-      type: types.LOADING_CREATE_SUBSCRIPTION,
+      type: types.UPDATING_SUBSCRIPTION,
       payload: podcast_id
     })
 
     const { id } = getState().auth.user
-    return apiAdapter.addSubscription(id, { podcast_id })
+    return apiAdapter.addSubscription(id, podcast_id)
       .then(podcast => {
         dispatch({
-          type: types.CREATE_SUBSCRIPTION,
+          type: types.CREATED_SUBSCRIPTION,
           payload: podcast
         })
       })
@@ -20,18 +20,18 @@ const create = (podcast_id) => {
   }
 }
 
-const remove = (podcast_id, subscriptionId) => {
+const remove = (podcast_id) => {
   return (dispatch, getState) => {
     dispatch({
-      type: types.LOADING_CREATE_SUBSCRIPTION,
+      type: types.UPDATING_SUBSCRIPTION,
       payload: podcast_id
     })
 
     const { id } = getState().auth.user
-    return apiAdapter.removeSubscription(id, subscriptionId)
+    return apiAdapter.removeSubscription(id, podcast_id)
       .then(() => {
         dispatch({
-          type: types.REMOVE_SUBSCRIPTION,
+          type: types.REMOVED_SUBSCRIPTION,
           payload: podcast_id
         })
       })

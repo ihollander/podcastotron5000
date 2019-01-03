@@ -4,22 +4,15 @@ import { List, Button } from "semantic-ui-react";
 const PlaylistItem = ({
   item: {
     id,
-    episode_id,
-    episode: {
-      title,
-      podcast: { name }
-    }
+    title,
+    podcast: { name }
   },
   onEpisodePlayClick,
   onEpisodeRemoveClick
 }) => {
-  const onPlayClick = () => {
-    onEpisodePlayClick(episode_id, id);
-  };
+  const onPlayClick = () => onEpisodePlayClick(id);
 
-  const onRemoveClick = () => {
-    onEpisodeRemoveClick(episode_id, id);
-  };
+  const onRemoveClick = () => onEpisodeRemoveClick(id);
 
   return (
     <List.Item>

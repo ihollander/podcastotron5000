@@ -8,26 +8,21 @@ const PodcastInfo = ({
     artistName,
     artworkUrl600,
     description,
-    subscriptions,
-    subscribing
+    subscribed,
+    currentlyUpdating
   },
   onUnsubscribeClick,
   onSubscribeClick
 }) => {
-  const onSubscribeButtonClick = () => {
-    onSubscribeClick(id);
-  };
-
-  const onUnsubscribeButtonClick = () => {
-    onUnsubscribeClick(id, subscriptions[0].subscriptions[0].id);
-  };
+  const onSubscribeButtonClick = () => onSubscribeClick(id);
+  const onUnsubscribeButtonClick = () => onUnsubscribeClick(id);
 
   const renderSubscribe = () => {
     return (
       <>
-        {subscriptions.length ? (
+        {subscribed ? (
           <Button
-            loading={subscribing}
+            loading={currentlyUpdating}
             onClick={onUnsubscribeButtonClick}
             color="red"
           >
@@ -35,7 +30,7 @@ const PodcastInfo = ({
           </Button>
         ) : (
           <Button
-            loading={subscribing}
+            loading={currentlyUpdating}
             onClick={onSubscribeButtonClick}
             primary
           >

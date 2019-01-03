@@ -9,18 +9,11 @@ const INITIAL_EPISODES_STATE = {
 
 export default (state = INITIAL_EPISODES_STATE, action) => {
   switch (action.type) {
-    case types.CREATE_SUBSCRIPTION:
-    case types.REMOVE_SUBSCRIPTION:
+    case types.SIGN_OUT:
+    case types.CREATED_SUBSCRIPTION:
+    case types.REMOVED_SUBSCRIPTION:
       // reset state to load new subscriptions...
       return INITIAL_EPISODES_STATE
-    case types.LOADING_CREATE_PLAYLIST:
-      const loadingEpisodes = state.episodes.map(e =>
-        e.id === action.payload ? { ...e, creatingPlaylist: true } : e
-      );
-      return {
-        ...state,
-        episodes: loadingEpisodes
-      };
     case types.LOADING_RECENT_EPISODES:
       return { ...state, loading: true };
     case types.FETCH_RECENT_EPISODES:

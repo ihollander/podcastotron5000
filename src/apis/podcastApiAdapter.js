@@ -7,30 +7,25 @@ class PodcastAPIAdapter {
     }
   }
   
-  // GET /users/google_signin/:google_id
-  getUser(googleUserId) {
-    return this._fetch(`${this.baseUrl}/users/google_signin/${googleUserId}`, {
-      method: 'GET'
+  // POST /users
+  userCreate(data) {
+    return this._fetch(`${this.baseUrl}/users/`, {
+      method: 'POST',
+      headers: this.defaultHeaders,
+      body: JSON.stringify(data)
     })
   }
   
-  // GET /users/:user_id/podcasts/search
-  searchPodcasts(userId, term) {
-    return this._fetch(`${this.baseUrl}/users/${userId}/podcasts/search?term=${term}`, {
+  // GET /podcasts/search/:term
+  searchPodcasts(term) {
+    return this._fetch(`${this.baseUrl}/podcasts/search/${term}`, {
       method: 'GET'
     })
   }
 
-  // GET /users/:user_id/podcasts/recent
-  getRecentEpisodes(userId, page) {
-    return this._fetch(`${this.baseUrl}/users/${userId}/podcasts/recent?page=${page}`, {
-      method: 'GET'
-    })
-  }
-
-  // GET /users/:user_id/podcasts/:id
-  getPodcast(userId, slug) {
-    return this._fetch(`${this.baseUrl}/users/${userId}/podcasts/${slug}`, {
+  // GET /podcasts/:id
+  getPodcast(slug) {
+    return this._fetch(`${this.baseUrl}/podcasts/${slug}`, {
       method: 'GET'
     })
   }
@@ -44,25 +39,23 @@ class PodcastAPIAdapter {
 
   // SUBSCRIPTIONS
 
-  // GET /users/:user_id/subscriptions/:id
+  // GET /users/:user_id/podcasts
   getSubscriptions(userId) {
     return this._fetch(`${this.baseUrl}/users/${userId}/podcasts`, {
       method: 'GET'
     })
   }
 
-  // POST /users/:user_id/subscriptions
-  addSubscription(userId, data) {
-    return this._fetch(`${this.baseUrl}/users/${userId}/subscriptions`, {
-      method: 'POST',
-      headers: this.defaultHeaders,
-      body: JSON.stringify(data)
+  // POST /users/:user_id/podcast/:podcast_id/subscribe
+  addSubscription(userId, podcastId) {
+    return this._fetch(`${this.baseUrl}/users/${userId}/podcasts/${podcastId}/subscription`, {
+      method: 'POST'
     })
   }
 
-  // DELETE /users/:user_id/subscriptions/:id
-  removeSubscription(userId, subscriptionId) {
-    return fetch(`${this.baseUrl}/users/${userId}/subscriptions/${subscriptionId}`, {
+  // DELETE /users/:user_id/podcast/:podcast_id/subscribe
+  removeSubscription(userId, podcastId) {
+    return fetch(`${this.baseUrl}/users/${userId}/podcasts/${podcastId}/subscription`, {
       method: 'DELETE'
     })
   }
@@ -71,24 +64,29 @@ class PodcastAPIAdapter {
 
   // GET /users/:user_id/playlists
   getPlaylists(userId) {
-    return this._fetch(`${this.baseUrl}/users/${userId}/playlists`, {
+    return this._fetch(`${this.baseUrl}/users/${userId}/episodes`, {
       method: 'GET'
     })
   }
 
-  // POST /users/:user_id/playlists
-  createPlaylist(userId, data) {
-    return this._fetch(`${this.baseUrl}/users/${userId}/playlists`, {
-      method: 'POST',
-      headers: this.defaultHeaders,
-      body: JSON.stringify(data)
+  // POST /users/:user_id/episodes/:episode_id/playlist
+  createPlaylist(userId, episodeId) {
+    return this._fetch(`${this.baseUrl}/users/${userId}/episodes/${episodeId}/playlist`, {
+      method: 'POST'
     })
   }
 
-  // DELETE /users/:user_id/playlists/:id
-  removePlaylist(userId, playlistId) {
-    return fetch(`${this.baseUrl}/users/${userId}/playlists/${playlistId}`, {
+  // DELETE /users/:user_id/episodes/:episode_id/playlist
+  removePlaylist(userId, episodeId) {
+    return fetch(`${this.baseUrl}/users/${userId}/episodes/${episodeId}/playlist`, {
       method: 'DELETE'
+    })
+  }
+
+  // GET /users/:user_id/episodes/recent
+  getRecentEpisodes(userId, page) {
+    return this._fetch(`${this.baseUrl}/users/${userId}/episodes/recent?page=${page}`, {
+      method: 'GET'
     })
   }
 

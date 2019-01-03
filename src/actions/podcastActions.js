@@ -2,14 +2,13 @@ import types from './types'
 import apiAdapter from '../apis/podcastApiAdapter'
 
 const search = searchTerm => {
-  return (dispatch, getState) => {
+  return dispatch => {
     dispatch({
       type: types.LOADING_SEARCH_PODCASTS,
       payload: searchTerm
     })
 
-    const { id } = getState().auth.user
-    return apiAdapter.searchPodcasts(id, searchTerm)
+    return apiAdapter.searchPodcasts(searchTerm)
       .then(podcasts => {
         dispatch({
           type: types.SEARCH_PODCASTS,
@@ -21,13 +20,12 @@ const search = searchTerm => {
 }
 
 const get = slug => {
-  return (dispatch, getState) => {
+  return dispatch => {
     dispatch({
       type: types.LOADING_FETCH_PODCAST
     })
 
-    const { id } = getState().auth.user
-    return apiAdapter.getPodcast(id, slug)
+    return apiAdapter.getPodcast(slug)
       .then(podcast => {
         dispatch({
           type: types.FETCH_PODCAST,
