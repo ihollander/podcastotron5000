@@ -1,9 +1,9 @@
 import React from "react";
 import { Message } from "semantic-ui-react";
 
-const NoSubscriptions = ({header, children}) => {
+const MessageDisplay = ({header, children, type}) => {
   return (
-    <Message>
+    <Message {...type}>
       <Message.Header>{header}</Message.Header>
       <p>
         {children}
@@ -12,4 +12,4 @@ const NoSubscriptions = ({header, children}) => {
   );
 };
 
-export default NoSubscriptions;
+export default MessageDisplay;

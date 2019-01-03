@@ -8,6 +8,7 @@ import LoginLayoutRoute from "./routes/LoginLayoutRoute";
 import AuthenticatedLayoutRoute from "./routes/AuthenticatedLayoutRoute";
 
 import LoginContainer from "./login/LoginContainer";
+import SignupContainer from "./signup/SignupContainer";
 import SubscriptionContainer from "./subscriptions/SubscriptionContainer";
 import SearchResultContainer from "./search/SearchResultContainer";
 import PodcastContainer from "./podcasts/PodcastContainer";
@@ -21,6 +22,7 @@ const App = ({ auth: { isSignedIn } }) => {
       <ScrollToTop>
         <Switch>
           <LoginLayoutRoute exact path="/login" component={LoginContainer} />
+          <LoginLayoutRoute exact path="/signup" component={SignupContainer} />
           <AuthenticatedLayoutRoute
             isAuthenticated={isSignedIn}
             exact

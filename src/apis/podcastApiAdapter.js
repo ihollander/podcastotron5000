@@ -6,6 +6,17 @@ class PodcastAPIAdapter {
       'Accept': 'application/json'
     }
   }
+
+  get authHeader() {
+    // return authorization header with jwt token
+    let user = JSON.parse(localStorage.getItem('user'));
+
+    if (user && user.jwt) {
+        return { 'Authorization': 'Bearer ' + user.jwt };
+    } else {
+        return {};
+    }
+  }
   
   // POST /users
   userCreate(data) {
@@ -15,78 +26,97 @@ class PodcastAPIAdapter {
       body: JSON.stringify(data)
     })
   }
+
+  // POST /login
+  userSignIn(data) {
+    return this._fetch(`${this.baseUrl}/login/`, {
+      method: 'POST',
+      headers: this.defaultHeaders,
+      body: JSON.stringify(data)
+    })
+  }
   
   // GET /podcasts/search/:term
   searchPodcasts(term) {
     return this._fetch(`${this.baseUrl}/podcasts/search/${term}`, {
-      method: 'GET'
+      method: 'GET',
+      headers: {...this.authHeader}
     })
   }
 
   // GET /podcasts/:id
   getPodcast(slug) {
     return this._fetch(`${this.baseUrl}/podcasts/${slug}`, {
-      method: 'GET'
+      method: 'GET',
+      headers: {...this.authHeader}
     })
   }
 
   // GET /episodes/:id
   getEpisode(id) {
     return this._fetch(`${this.baseUrl}/episodes/${id}`, {
-      method: 'GET'
+      method: 'GET',
+      headers: {...this.authHeader}
     })
   }
 
   // SUBSCRIPTIONS
 
-  // GET /users/:user_id/podcasts
-  getSubscriptions(userId) {
-    return this._fetch(`${this.baseUrl}/users/${userId}/podcasts`, {
-      method: 'GET'
+  // GET /podcasts
+  getSubscriptions() {
+    return this._fetch(`${this.baseUrl}/podcasts`, {
+      method: 'GET',
+      headers: {...this.authHeader}
     })
   }
 
-  // POST /users/:user_id/podcast/:podcast_id/subscribe
-  addSubscription(userId, podcastId) {
-    return this._fetch(`${this.baseUrl}/users/${userId}/podcasts/${podcastId}/subscription`, {
-      method: 'POST'
+  // POST /podcast/:podcast_id/subscribe
+  addSubscription(podcastId) {
+    return this._fetch(`${this.baseUrl}/podcasts/${podcastId}/subscription`, {
+      method: 'POST',
+      headers: {...this.authHeader}
     })
   }
 
-  // DELETE /users/:user_id/podcast/:podcast_id/subscribe
-  removeSubscription(userId, podcastId) {
-    return fetch(`${this.baseUrl}/users/${userId}/podcasts/${podcastId}/subscription`, {
-      method: 'DELETE'
+  // DELETE /podcast/:podcast_id/subscribe
+  removeSubscription(podcastId) {
+    return fetch(`${this.baseUrl}/podcasts/${podcastId}/subscription`, {
+      method: 'DELETE',
+      headers: {...this.authHeader}
     })
   }
 
   // PLAYLISTS
 
-  // GET /users/:user_id/playlists
-  getPlaylists(userId) {
-    return this._fetch(`${this.baseUrl}/users/${userId}/episodes`, {
-      method: 'GET'
+  // GET /episodes
+  getPlaylists() {
+    return this._fetch(`${this.baseUrl}/episodes`, {
+      method: 'GET',
+      headers: {...this.authHeader}
     })
   }
 
-  // POST /users/:user_id/episodes/:episode_id/playlist
-  createPlaylist(userId, episodeId) {
-    return this._fetch(`${this.baseUrl}/users/${userId}/episodes/${episodeId}/playlist`, {
-      method: 'POST'
+  // POST /episodes/:episode_id/playlist
+  createPlaylist(episodeId) {
+    return this._fetch(`${this.baseUrl}/episodes/${episodeId}/playlist`, {
+      method: 'POST',
+      headers: {...this.authHeader}
     })
   }
 
-  // DELETE /users/:user_id/episodes/:episode_id/playlist
-  removePlaylist(userId, episodeId) {
-    return fetch(`${this.baseUrl}/users/${userId}/episodes/${episodeId}/playlist`, {
-      method: 'DELETE'
+  // DELETE /episodes/:episode_id/playlist
+  removePlaylist(episodeId) {
+    return fetch(`${this.baseUrl}/episodes/${episodeId}/playlist`, {
+      method: 'DELETE',
+      headers: {...this.authHeader}
     })
   }
 
-  // GET /users/:user_id/episodes/recent
-  getRecentEpisodes(userId, page) {
-    return this._fetch(`${this.baseUrl}/users/${userId}/episodes/recent?page=${page}`, {
-      method: 'GET'
+  // GET /episodes/recent
+  getRecentEpisodes(page) {
+    return this._fetch(`${this.baseUrl}/episodes/recent?page=${page}`, {
+      method: 'GET',
+      headers: {...this.authHeader}
     })
   }
 

@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom'
 import { Menu, Container } from 'semantic-ui-react'
 
 import SearchBar from './search/SearchBar'
-import LoginContainer from './login/LoginContainer'
+import LogoutContainer from './login/LogoutContainer'
 
 const Header = () => {
 
@@ -18,7 +18,7 @@ const Header = () => {
         </Menu.Item>
         <Menu.Menu position="right">
           <Menu.Item>
-            <LoginContainer />
+            <LogoutContainer />
           </Menu.Item>
         </Menu.Menu>
       </Container>
