@@ -22,13 +22,9 @@ class SearchResultContainer extends React.Component {
   }
 
   // Event handlers
-  onSubscribeClick = podcastId => {
-    this.props.createSubscription(podcastId);
-  };
+  onSubscribeClick = podcastId => this.props.createSubscription(podcastId);
 
-  onUnsubscribeClick = (podcastId, subscriptionId) => {
-    this.props.removeSubscription(podcastId, subscriptionId);
-  };
+  onUnsubscribeClick = podcastId => this.props.removeSubscription(podcastId);
 
   // render
   render() {
@@ -57,14 +53,14 @@ class SearchResultContainer extends React.Component {
 
 const mapStateToProps = state => {
   const { searchResults, loading } = state.search;
-  const { podcasts: subscriptions } = state.subscriptions;
+  const { podcasts: subscriptions, currentlyUpdating: currentlyUpdatingPodcast } = state.subscriptions;
 
-  const mappedResults = searchResults.reduce((arr, podcast) => {
-    const podSubscription = subscriptions.find(s => s.id === podcast.id);
-    const podSubscriptions = podSubscription ? podSubscription.subscriptions : [];
-    arr.push({ ...podcast, subscriptions: podSubscriptions, subscribing: false });
-    return arr;
-  }, []);
+  console.log(currentlyUpdatingPodcast)
+  const mappedResults = searchResults.map(searchPodcast => {
+    const subscribed = subscriptions.some(p => p.id === searchPodcast.id)
+    const currentlyUpdating = searchPodcast.id === currentlyUpdatingPodcast
+    return {...searchPodcast, subscribed, currentlyUpdating }
+  });
 
   return {
     searchResults: mappedResults,

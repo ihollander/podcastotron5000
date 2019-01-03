@@ -27,19 +27,19 @@ const getAll = () => {
   };
 };
 
-const create = episode_id => {
+const create = episodeId => {
   return (dispatch, getState) => {
     dispatch({
-      type: types.LOADING_CREATE_PLAYLIST,
-      payload: episode_id
+      type: types.UPDATING_PLAYLIST,
+      payload: episodeId
     });
 
     const { id } = getState().auth.user;
     return apiAdapter
-      .createPlaylist(id, { episode_id })
+      .createPlaylist(id, episodeId)
       .then(playlist => {
         dispatch({
-          type: types.CREATE_PLAYLIST,
+          type: types.CREATED_PLAYLIST,
           payload: playlist
         });
       })
@@ -47,20 +47,20 @@ const create = episode_id => {
   };
 };
 
-const remove = (episode_id, playlist_id) => {
+const remove = episodeId => {
   return (dispatch, getState) => {
     dispatch({
-      type: types.LOADING_CREATE_PLAYLIST,
-      payload: episode_id
+      type: types.UPDATING_PLAYLIST,
+      payload: episodeId
     });
 
     const { id } = getState().auth.user;
     return apiAdapter
-      .removePlaylist(id, playlist_id)
+      .removePlaylist(id, episodeId)
       .then(() => {
         dispatch({
-          type: types.REMOVE_PLAYLIST,
-          payload: episode_id
+          type: types.REMOVED_PLAYLIST,
+          payload: episodeId
         });
       })
       .catch(console.error);
@@ -68,38 +68,37 @@ const remove = (episode_id, playlist_id) => {
 };
 
 // fetch episode or retrieve from queue in state?
-const updateNowPlaying = (episode_id, playlist_id) => {
+const updateNowPlaying = episodeId => {
   return (dispatch, getState) => {
     dispatch({
       type: types.LOADING_FETCH_EPISODE,
-      payload: episode_id
+      payload: episodeId
     });
 
-    // if (playlist_id) {
-    //   const { id } = getState().auth.user;
-    //   apiAdapter.removePlaylist(id, playlist_id);
-    // }
-
-    return apiAdapter
-      .getEpisode(episode_id)
-      .then(episode => {
-        dispatch({
-          type: types.UPDATE_NOW_PLAYING,
-          payload: episode
-        });
-      })
-      .then(() => {
-        // remove from playlist if it's in there
-        if (playlist_id) {
-          apiAdapter.removePlaylist(episode_id, playlist_id).then(() => {
+    return (
+      apiAdapter
+        .getEpisode(episodeId)
+        .then(episode => {
+          dispatch({
+            type: types.UPDATE_NOW_PLAYING,
+            payload: episode
+          });
+        })
+        .then(() => {
+        // remove from playlist if it's in there???
+        const inPlaylist = getState().playlist.queue.some(e => e.id === episodeId)
+        if (inPlaylist) {
+          const { id } = getState().auth.user;
+          apiAdapter.removePlaylist(id, episodeId).then(() => {
             dispatch({
-              type: types.REMOVE_PLAYLIST,
-              payload: episode_id
+              type: types.REMOVED_PLAYLIST,
+              payload: episodeId
             });
           });
         }
-      })
-      .catch(console.error);
+        })
+        .catch(console.error)
+    );
   };
 };
 

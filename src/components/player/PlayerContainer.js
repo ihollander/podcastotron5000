@@ -33,14 +33,7 @@ class PlayerContainer extends React.Component {
   onAudioPause = () => this.setState({ playing: false });
 
   onAudioEnded = () => {
-    console.log('audioEnded')
-    this.setState({ playing: false }, () => {
-      this.props.currentTrackEnded(); // remove now playing
-      if (this.props.queue.length) {
-        const nextEpisode = this.props.queue[0]
-        this.props.updateNowPlaying(nextEpisode.episode_id, nextEpisode.id); // update to next
-      }
-    });
+    this.goToNextEpisode()
   };
 
   onAudioPlaying = currentTime => this.setState({ currentTime });
@@ -110,7 +103,7 @@ class PlayerContainer extends React.Component {
       this.props.currentTrackEnded(); // remove now playing
       if (this.props.queue.length) {
         const nextEpisode = this.props.queue[0]
-        this.props.updateNowPlaying(nextEpisode.episode_id, nextEpisode.id); // update to next
+        this.props.updateNowPlaying(nextEpisode.id); // update to next
       }
     });
   }

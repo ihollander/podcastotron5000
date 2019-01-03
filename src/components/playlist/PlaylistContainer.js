@@ -14,11 +14,9 @@ class PlaylistContainer extends React.Component {
   }
 
   // Event Handlers
-  onEpisodePlayClick = (episodeId, playlistId) =>
-    this.props.updateNowPlaying(episodeId, playlistId);
+  onEpisodePlayClick = episodeId => this.props.updateNowPlaying(episodeId);
 
-  onEpisodeRemoveClick = (episodeId, playlistId) =>
-    this.props.removePlaylist(episodeId, playlistId);
+  onEpisodeRemoveClick = episodeId => this.props.removePlaylist(episodeId);
 
   render() {
     const { loading, queue, currentlyPlaying } = this.props;

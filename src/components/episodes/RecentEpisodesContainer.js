@@ -31,12 +31,9 @@ class RecentEpisodesContainer extends React.Component {
 
   onAddToPlaylistClick = episodeId => this.props.createPlaylist(episodeId);
 
-  onRemoveFromPlaylistClick = (userId, playlistId) => {
-    this.props.removePlaylist(userId, playlistId);
-  };
+  onRemoveFromPlaylistClick = episodeId => this.props.removePlaylist(episodeId);
 
-  onEpisodePlayClick = (episodeId, playlistId) =>
-    this.props.updateNowPlaying(episodeId, playlistId);
+  onEpisodePlayClick = episodeId => this.props.updateNowPlaying(episodeId);
 
   // Render
   render() {
@@ -68,11 +65,11 @@ class RecentEpisodesContainer extends React.Component {
 
 const mapStateToProps = state => {
   const { episodes, page, lastPage, loading } = state.episodes;
-  const { queue } = state.playlist;
+  const { queue, currentlyUpdating } = state.playlist;
   const mappedEpisodes = episodes.reduce((arr, episode) => {
-    const playlist = queue.find(p => p.episode_id === episode.id);
-    const playlists = playlist ? [playlist] : [];
-    arr.push({ ...episode, playlists: playlists, creatingPlaylist: false });
+    const inPlaylist = queue.some(e => e.id === episode.id);
+    const updatingPlaylist = currentlyUpdating === episode.id;
+    arr.push({ ...episode, inPlaylist, updatingPlaylist });
     return arr;
   }, []);
   return { episodes: mappedEpisodes, page, lastPage, loading };

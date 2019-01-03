@@ -8,33 +8,29 @@ const EpisodeItem = ({
     title,
     pubDate,
     description,
-    playlists,
-    creatingPlaylist,
-    podcast
+    podcast,
+    updatingPlaylist,
+    inPlaylist
   },
   onEpisodePlayClick,
   onAddToPlaylistClick,
   onRemoveFromPlaylistClick
 }) => {
   // Event handlers
-  const onPlayClick = () => {
-    playlists.length
-      ? onEpisodePlayClick(id, playlists[0].id)
-      : onEpisodePlayClick(id);
-  };
+  const onPlayClick = () => onEpisodePlayClick(id);
 
   const onAddClick = () => onAddToPlaylistClick(id);
 
-  const onRemoveClick = () => onRemoveFromPlaylistClick(id, playlists[0].id);
+  const onRemoveClick = () => onRemoveFromPlaylistClick(id);
 
   // Render
   const renderPlaylistButton = () => {
-    return playlists && playlists.length ? (
-      <Button loading={creatingPlaylist} onClick={onRemoveClick} color="red">
+    return inPlaylist ? (
+      <Button loading={updatingPlaylist} onClick={onRemoveClick} color="red">
         Remove From Playlist
       </Button>
     ) : (
-      <Button loading={creatingPlaylist} onClick={onAddClick} secondary>
+      <Button loading={updatingPlaylist} onClick={onAddClick} secondary>
         Add to Playlist
       </Button>
     );
