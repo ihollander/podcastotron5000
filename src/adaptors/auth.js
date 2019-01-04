@@ -1,11 +1,6 @@
-class AuthService {
-  constructor() {
-    this.baseUrl = "http://localhost:4000/api/v1";
-    this.defaultHeaders = {
-      "Content-Type": "application/json",
-      Accept: "application/json"
-    };
-  }
+import BaseApiAdaptor from './baseApiAdaptor'
+
+class AuthAdaptor extends BaseApiAdaptor {
 
   signUp(data) {
     return fetch(`${this.baseUrl}/users/`, {
@@ -40,12 +35,6 @@ class AuthService {
   logout() {
     localStorage.removeItem("user");
   }
-
-  handleResponse(response) {
-    return response
-      .json()
-      .then(json => (response.ok ? json : Promise.reject(json)));
-  }
 }
 
-export default new AuthService();
+export default new AuthAdaptor();

@@ -55,7 +55,7 @@ const mapStateToProps = state => {
   const { searchResults, loading } = state.search;
   const { podcasts: subscriptions, currentlyUpdating: currentlyUpdatingPodcast } = state.subscriptions;
 
-  console.log(currentlyUpdatingPodcast)
+  // TODO: move this logic out of mapStateToProps
   const mappedResults = searchResults.map(searchPodcast => {
     const subscribed = subscriptions.some(p => p.id === searchPodcast.id)
     const currentlyUpdating = searchPodcast.id === currentlyUpdatingPodcast

@@ -68,6 +68,8 @@ class RecentEpisodesContainer extends React.Component {
 const mapStateToProps = state => {
   const { episodes, page, lastPage, loading } = state.episodes;
   const { queue, currentlyUpdating } = state.playlist;
+
+  // TODO: move this logic out of mapStateToProps
   const mappedEpisodes = episodes.reduce((arr, episode) => {
     const inPlaylist = queue.some(e => e.id === episode.id);
     const updatingPlaylist = currentlyUpdating === episode.id;

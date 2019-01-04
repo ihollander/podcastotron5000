@@ -34,6 +34,7 @@ class SubscriptionContainer extends React.Component {
 
 const mapStateToProps = state => {
   const { podcasts, loading, currentlyUpdating } = state.subscriptions;
+  // TODO: move this logic out of mapStateToProps
   const mappedPodcasts = podcasts.map(p => ({
     ...p,
     subscribed: true,

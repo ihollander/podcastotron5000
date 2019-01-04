@@ -1,99 +1,114 @@
-import types from "./types";
-import apiAdapter from "../apis/podcastApiAdapter";
+import { playlistTypes } from "../actionTypes/playlist";
+import playlistAdaptor from "../adaptors/playlist";
 
-const currentTrackEnded = episode_id => {
+const currentTrackEnded = episodeId => {
   return {
-    type: types.CURRENT_TRACK_ENDED,
-    payload: episode_id
+    type: playlistTypes.CURRENT_TRACK_ENDED,
+    payload: episodeId
   };
 };
 
 const getAll = () => {
-  return (dispatch) => {
-    dispatch({
-      type: types.LOADING_FETCH_PLAYLISTS
-    });
+  const request = () => ({ type: playlistTypes.PLAYLISTS_LOADING });
+  const success = playlists => ({
+    type: playlistTypes.PLAYLISTS_LOADED,
+    payload: playlists
+  });
 
-    return apiAdapter
-      .getPlaylists()
-      .then(playlists => {
-        dispatch({
-          type: types.FETCH_PLAYLISTS,
-          payload: playlists
-        });
-      })
-      .catch(console.error);
+  return dispatch => {
+    dispatch(request());
+
+    playlistAdaptor.getAll().then(
+      playlists => {
+        dispatch(success(playlists));
+      },
+      error => {
+        console.error(error);
+      }
+    );
   };
 };
 
 const create = episodeId => {
-  return (dispatch) => {
-    dispatch({
-      type: types.UPDATING_PLAYLIST,
-      payload: episodeId
-    });
+  const request = episodeId => ({
+    type: playlistTypes.PLAYLIST_UPDATING,
+    payload: episodeId
+  });
+  const success = playlist => ({
+    type: playlistTypes.PLAYLIST_CREATED,
+    payload: playlist
+  });
 
-    return apiAdapter
-      .createPlaylist(episodeId)
-      .then(playlist => {
-        dispatch({
-          type: types.CREATED_PLAYLIST,
-          payload: playlist
-        });
-      })
-      .catch(console.error);
+  return dispatch => {
+    dispatch(request(episodeId));
+
+    playlistAdaptor.create(episodeId).then(
+      playlist => {
+        dispatch(success(playlist));
+      },
+      error => {
+        console.error(error);
+      }
+    );
   };
 };
 
 const remove = episodeId => {
-  return (dispatch) => {
-    dispatch({
-      type: types.UPDATING_PLAYLIST,
-      payload: episodeId
-    });
+  const request = episodeId => ({
+    type: playlistTypes.PLAYLIST_UPDATING,
+    payload: episodeId
+  });
+  const success = episodeId => ({
+    type: playlistTypes.PLAYLIST_REMOVED,
+    payload: episodeId
+  });
 
-    return apiAdapter
-      .removePlaylist(episodeId)
-      .then(() => {
-        dispatch({
-          type: types.REMOVED_PLAYLIST,
-          payload: episodeId
-        });
-      })
-      .catch(console.error);
+  return dispatch => {
+    dispatch(request(episodeId));
+
+    playlistAdaptor.remove(episodeId).then(
+      () => {
+        dispatch(success(episodeId));
+      }
+    );
   };
 };
 
 // fetch episode or send as params?
 const updateNowPlaying = episodeId => {
-  return (dispatch, getState) => {
-    dispatch({
-      type: types.LOADING_FETCH_EPISODE,
-      payload: episodeId
-    });
+  const request = episodeId => ({
+    type: playlistTypes.PLAYLIST_UPDATING,
+    payload: episodeId
+  });
+  const success = episode => ({
+    type: playlistTypes.UPDATE_NOW_PLAYING,
+    payload: episode
+  });
+  const removeSuccess = episodeId => ({
+    type: playlistTypes.PLAYLIST_REMOVED,
+    payload: episodeId
+  });
 
-    return (
-      apiAdapter
-        .getEpisode(episodeId)
-        .then(episode => {
-          dispatch({
-            type: types.UPDATE_NOW_PLAYING,
-            payload: episode
-          });
-        })
-        .then(() => {
+  return (dispatch, getState) => {
+    dispatch(request(episodeId));
+
+    playlistAdaptor.get(episodeId).then(
+      episode => {
+        dispatch(success(episode));
+
         // remove from playlist if it's in there???
-        const inPlaylist = getState().playlist.queue.some(e => e.id === episodeId)
+        const inPlaylist = getState().playlist.queue.some(
+          e => e.id === episodeId
+        );
         if (inPlaylist) {
-          apiAdapter.removePlaylist(episodeId).then(() => {
-            dispatch({
-              type: types.REMOVED_PLAYLIST,
-              payload: episodeId
-            });
+          playlistAdaptor.remove(episodeId).then(() => {
+            dispatch(removeSuccess(episodeId));
           });
         }
-        })
-        .catch(console.error)
+      },
+      error => {
+        console.error(error);
+      }
     );
   };
 };
