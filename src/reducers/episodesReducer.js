@@ -1,4 +1,6 @@
-import types from "../actions/types";
+import { authTypes } from "../actionTypes/auth";
+import { subscriptionTypes } from "../actionTypes/subscription";
+import { podcastTypes } from '../actionTypes/podcast'
 
 const INITIAL_EPISODES_STATE = {
   page: 1,
@@ -9,14 +11,13 @@ const INITIAL_EPISODES_STATE = {
 
 export default (state = INITIAL_EPISODES_STATE, action) => {
   switch (action.type) {
-    case types.SIGN_OUT:
-    case types.CREATED_SUBSCRIPTION:
-    case types.REMOVED_SUBSCRIPTION:
-      // reset state to load new subscriptions...
-      return INITIAL_EPISODES_STATE
-    case types.LOADING_RECENT_EPISODES:
+    case authTypes.LOGOUT_SUCCESS:
+    case subscriptionTypes.SUBSCRIPTION_CREATED:
+    case subscriptionTypes.SUBSCRIPTION_REMOVED:
+      return INITIAL_EPISODES_STATE; // reset state to load new subscriptions...
+    case podcastTypes.RECENT_EPISODES_LOADING:
       return { ...state, loading: true };
-    case types.FETCH_RECENT_EPISODES:
+    case podcastTypes.RECENT_EPISODES_LOADED:
       return {
         ...state,
         episodes: [...state.episodes, ...action.payload],

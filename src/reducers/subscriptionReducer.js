@@ -1,4 +1,5 @@
-import types from "../actions/types";
+import { subscriptionTypes } from "../actionTypes/subscription";
+import { authTypes } from "../actionTypes/auth";
 
 const INITIAL_SUBSCRIPTION_STATE = {
   podcasts: [],
@@ -8,23 +9,23 @@ const INITIAL_SUBSCRIPTION_STATE = {
 
 export default (state = INITIAL_SUBSCRIPTION_STATE, action) => {
   switch (action.type) {
-    case types.SIGN_OUT:
+    case authTypes.LOGOUT_SUCCESS:
       return INITIAL_SUBSCRIPTION_STATE;
-    case types.LOADING_FETCH_SUBSCRIPTIONS:
+    case subscriptionTypes.SUBSCRIPTIONS_LOADING:
       return { ...state, loading: true };
-    case types.UPDATING_SUBSCRIPTION:
+    case subscriptionTypes.SUBSCRIPTIONS_LOADED:
+      return { ...state, podcasts: [...action.payload], loading: false };
+    case subscriptionTypes.SUBSCRIPTION_UPDATING:
       return { ...state, currentlyUpdating: action.payload };
-    case types.CREATED_SUBSCRIPTION:
+    case subscriptionTypes.SUBSCRIPTION_CREATED:
       return {
         ...state,
         currentlyUpdating: null,
         podcasts: [...state.podcasts, action.payload]
       };
-    case types.REMOVED_SUBSCRIPTION:
+    case subscriptionTypes.SUBSCRIPTION_REMOVED:
       let removePodcasts = state.podcasts.filter(p => p.id !== action.payload);
       return { ...state, currentlyUpdating: null, podcasts: removePodcasts };
-    case types.FETCH_SUBSCRIPTIONS:
-      return { ...state, podcasts: [...action.payload], loading: false };
     default:
       return state;
   }

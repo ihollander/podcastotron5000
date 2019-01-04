@@ -1,6 +1,6 @@
-import actionTypes from "../actions/types";
+import { authTypes } from "../actionTypes/auth";
 
-const user = JSON.parse(localStorage.getItem('user'))
+const user = JSON.parse(localStorage.getItem("user"));
 const INITIAL_STATE = {
   loading: false,
   isSignedIn: !!user,
@@ -10,11 +10,11 @@ const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case actionTypes.SIGNING_IN:
+    case authTypes.LOGIN_REQUEST:
       return { ...state, loading: true };
-    case actionTypes.LOGIN_ERROR:
+    case authTypes.LOGIN_ERROR:
       return { ...state, loading: false, error: action.payload };
-    case actionTypes.SIGNED_IN:
+    case authTypes.LOGIN_SUCCESS:
       return {
         ...state,
         isSignedIn: true,
@@ -22,7 +22,7 @@ export default (state = INITIAL_STATE, action) => {
         loading: false,
         error: null
       };
-    case actionTypes.SIGN_OUT:
+    case authTypes.LOGOUT_SUCCESS:
       return {
         ...state,
         isSignedIn: false,

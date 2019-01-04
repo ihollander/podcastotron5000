@@ -1,4 +1,5 @@
-import types from "../actions/types";
+import { podcastTypes } from "../actionTypes/podcast";
+import { authTypes } from "../actionTypes/auth";
 import * as moment from "moment";
 
 const INITIAL_PODCAST_STATE = {
@@ -8,11 +9,11 @@ const INITIAL_PODCAST_STATE = {
 
 export default (state = INITIAL_PODCAST_STATE, action) => {
   switch (action.type) {
-    case types.SIGN_OUT:
+    case authTypes.LOGOUT_SUCCESS:
       return INITIAL_PODCAST_STATE
-    case types.LOADING_FETCH_PODCAST:
+    case podcastTypes.PODCAST_LOADING:
       return { ...state, loading: true };
-    case types.FETCH_PODCAST:
+    case podcastTypes.PODCAST_LOADED:
       action.payload.episodes.sort(
         (a, b) => moment(b.pubDate) - moment(a.pubDate)
       );

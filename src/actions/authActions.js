@@ -1,10 +1,10 @@
 import { authTypes } from "../actionTypes/auth";
-import authService from "../services/authService"
+import authService from "../adaptors/auth"
 import history from "../history";
 
 const signUp = formData => {
-  const request = () => ({ type: authTypes.SIGNING_IN });
-  const success = user => ({ type: authTypes.SIGNED_IN, payload: user });
+  const request = () => ({ type: authTypes.LOGIN_REQUEST });
+  const success = user => ({ type: authTypes.LOGIN_SUCCESS, payload: user });
   const failure = error => ({ type: authTypes.LOGIN_ERROR, payload: error });
 
   return dispatch => {
@@ -24,8 +24,8 @@ const signUp = formData => {
 };
 
 const signIn = formData => {
-  const request = () => ({ type: authTypes.SIGNING_IN });
-  const success = user => ({ type: authTypes.SIGNED_IN, payload: user });
+  const request = () => ({ type: authTypes.LOGIN_REQUEST });
+  const success = user => ({ type: authTypes.LOGIN_SUCCESS, payload: user });
   const failure = error => ({ type: authTypes.LOGIN_ERROR, payload: error });
 
   return dispatch => {
@@ -49,7 +49,7 @@ const signIn = formData => {
 const signOut = () => {
   authService.logout()
   return {
-    type: authTypes.SIGN_OUT
+    type: authTypes.LOGOUT_SUCCESS
   };
 };
 

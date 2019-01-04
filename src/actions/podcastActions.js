@@ -1,60 +1,77 @@
-import types from './types'
-import apiAdapter from '../apis/podcastApiAdapter'
+import { podcastTypes } from "../actionTypes/podcast";
+import podcastAdaptor from "../adaptors/podcast";
 
 const search = searchTerm => {
-  return dispatch => {
-    dispatch({
-      type: types.LOADING_SEARCH_PODCASTS,
-      payload: searchTerm
-    })
+  const request = () => ({
+    type: podcastTypes.SEARCH_PODCASTS_LOADING,
+    payload: searchTerm
+  });
+  const success = podcasts => ({
+    type: podcastTypes.SEARCH_PODCASTS_LOADED,
+    payload: podcasts
+  });
 
-    return apiAdapter.searchPodcasts(searchTerm)
-      .then(podcasts => {
-        dispatch({
-          type: types.SEARCH_PODCASTS,
-          payload: podcasts
-        })
-      })
-      .catch(console.error)
-  }
-}
+  return dispatch => {
+    dispatch(request());
+
+    podcastAdaptor.searchPodcasts(searchTerm).then(
+      podcasts => {
+        dispatch(success(podcasts));
+      },
+      error => {
+        console.error(error);
+      }
+    );
+  };
+};
 
 const get = slug => {
-  return dispatch => {
-    dispatch({
-      type: types.LOADING_FETCH_PODCAST
-    })
+  const request = () => ({
+    type: podcastTypes.PODCAST_LOADING
+  });
+  const success = podcast => ({
+    type: podcastTypes.PODCAST_LOADED,
+    payload: podcast
+  });
 
-    return apiAdapter.getPodcast(slug)
-      .then(podcast => {
-        dispatch({
-          type: types.FETCH_PODCAST,
-          payload: podcast
-        })
-      })
-      .catch(console.error)
-  }
-}
+  return dispatch => {
+    dispatch(request());
+
+    podcastAdaptor.getPodcast(slug).then(
+      podcast => {
+        dispatch(success(podcast));
+      },
+      error => {
+        console.error(error);
+      }
+    );
+  };
+};
 
 const getRecentEpisodes = page => {
-  return (dispatch) => {
-    dispatch({
-      type: types.LOADING_RECENT_EPISODES
-    })
+  const request = () => ({
+    type: podcastTypes.RECENT_EPISODES_LOADING
+  });
+  const success = episodes => ({
+    type: podcastTypes.RECENT_EPISODES_LOADED,
+    payload: episodes
+  });
 
-    return apiAdapter.getRecentEpisodes(page)
-      .then(response => {
-        dispatch({
-          type: types.FETCH_RECENT_EPISODES,
-          payload: response
-        })
-      })
-      .catch(console.error)
-  }
-}
+  return dispatch => {
+    dispatch(request());
+
+    podcastAdaptor.getRecentEpisodes(page).then(
+      episodes => {
+        dispatch(success(episodes))
+      }, error => {
+        console.error(error);
+      }
+    )
+  };
+};
 
 export const podcastActions = {
   search,
   get,
   getRecentEpisodes
-}
+};
