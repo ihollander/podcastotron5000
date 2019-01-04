@@ -34,12 +34,10 @@ const signIn = formData => {
     authService.login({user: formData})
       .then(
         user => {
-          console.log('success:', user)
           dispatch(success(user))
           history.push("/")
         },
         error => {
-          console.log('error:', error)
           dispatch(failure(error))
         }
       )

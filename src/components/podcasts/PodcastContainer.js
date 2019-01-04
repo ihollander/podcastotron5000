@@ -75,6 +75,8 @@ class PodcastContainer extends React.Component {
 const mapStateToProps = state => {
   const { selectedPodcast, loading } = state.podcast;
   const { queue, currentlyUpdating } = state.playlist;
+
+  // TODO: move this logic out of mapStateToProps
   const {
     podcasts: subscriptions,
     currentlyUpdating: currentlyUpdatingSubscription
