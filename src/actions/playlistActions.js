@@ -64,7 +64,7 @@ const remove = episodeId => {
   };
 };
 
-// fetch episode or retrieve from queue in state?
+// fetch episode or send as params?
 const updateNowPlaying = episodeId => {
   return (dispatch, getState) => {
     dispatch({

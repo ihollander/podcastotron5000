@@ -1,0 +1,6 @@
+export const authTypes = {
+  SIGNING_IN: 'SIGNING_IN',
+  SIGN_OUT: 'SIGN_OUT',
+  SIGNED_IN: 'SIGNED_IN',
+  LOGIN_ERROR: 'LOGIN_ERROR'
+}

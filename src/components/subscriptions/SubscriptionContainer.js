@@ -7,10 +7,6 @@ import LoadingSpinner from "../LoadingSpinner";
 import Message from "../Message";
 
 class SubscriptionContainer extends React.Component {
-  // Lifecycle Methods
-  componentDidMount() {
-    this.props.getSubscriptions();
-  }
 
   // Event Handlers
   onUnsubscribeClick = podcastId => this.props.removeSubscription(podcastId);

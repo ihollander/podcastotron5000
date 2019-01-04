@@ -4,7 +4,7 @@ import * as moment from "moment";
 import ReactAudioPlayer from "react-audio-player";
 
 import { playlistActions } from "../../actions/playlistActions";
-import PlaylistControl from "./PlaylistControl";
+import VolumeControl from "./VolumeControl";
 import AudioControls from "./AudioControls";
 import PlayerEpisodeInfo from "./PlayerEpisodeInfo";
 
@@ -12,22 +12,24 @@ import PlayerEpisodeInfo from "./PlayerEpisodeInfo";
 const INITIAL_PLAYER_STATE = {
   duration: null,
   currentTime: 0,
-  playing: false
+  playing: false,
+  volume: 1
 };
 
 class PlayerContainer extends React.Component {
   state = INITIAL_PLAYER_STATE;
 
   // Lifecycle Methods
-  componentDidMount() {
-    this.props.getPlaylist();
-  }
-
   componentWillUnmount() {
     console.log("PlayerContainer componentWillUnmount");
   }
 
   // Event Handlers
+  onVolumeChange = e => {
+    const volume = parseFloat(e.target.value)
+    this.setState({ volume })
+  }
+
   onAudioPlay = () => this.setState({ playing: true });
 
   onAudioPause = () => this.setState({ playing: false });
@@ -159,12 +161,16 @@ class PlayerContainer extends React.Component {
           onForwardButtonClick={this.onForwardButtonClick}
           onStepForwardButtonClick={this.onStepForwardButtonClick}
         />
-        <PlaylistControl />
+        <VolumeControl
+          volume={this.state.volume}
+          onVolumeChange={this.onVolumeChange}
+         />
         <ReactAudioPlayer
           listenInterval={500}
           ref={el => {
             this.audioRef = el;
           }}
+          volume={this.state.volume}
           type={audioType}
           src={audioLink}
           onPlay={this.onAudioPlay}

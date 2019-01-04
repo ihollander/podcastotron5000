@@ -8,10 +8,20 @@ import {
 } from "../../actions";
 
 import PodcastInfo from "./PodcastInfo";
+import EpisodeFilter from "../episodes/EpisodeFilter";
 import EpisodeList from "../episodes/EpisodeList";
 import LoadingSpinner from "../LoadingSpinner";
 
 class PodcastContainer extends React.Component {
+  // UI state
+  state = {
+    term: ""
+  };
+
+  onFilterChange = e => {
+    this.setState({ [e.target.name]: e.target.value }, () => {});
+  };
+
   // Lifecycle Methods
   componentDidMount() {
     const { id } = this.props.match.params;
@@ -29,6 +39,16 @@ class PodcastContainer extends React.Component {
 
   onEpisodePlayClick = episodeId => this.props.updateNowPlaying(episodeId);
 
+  get filteredEpisodes() {
+    if (this.state.term !== "") {
+      return this.props.selectedPodcast.episodes.filter(e =>
+        e.title.toLowerCase().includes(this.state.term.toLowerCase())
+      );
+    } else {
+      return this.props.selectedPodcast.episodes
+    }
+  }
+
   render() {
     const { selectedPodcast, loading } = this.props;
     if (loading || !selectedPodcast) return <LoadingSpinner />;
@@ -40,11 +60,12 @@ class PodcastContainer extends React.Component {
           onUnsubscribeClick={this.onUnsubscribeClick}
           podcast={selectedPodcast}
         />
+        <EpisodeFilter term={this.state.term} onInputChange={this.onFilterChange} />
         <EpisodeList
           onAddToPlaylistClick={this.onAddToPlaylistClick}
           onRemoveFromPlaylistClick={this.onRemoveFromPlaylistClick}
           onEpisodePlayClick={this.onEpisodePlayClick}
-          episodes={selectedPodcast.episodes}
+          episodes={this.filteredEpisodes}
         />
       </>
     );
@@ -54,14 +75,22 @@ class PodcastContainer extends React.Component {
 const mapStateToProps = state => {
   const { selectedPodcast, loading } = state.podcast;
   const { queue, currentlyUpdating } = state.playlist;
-  const { podcasts: subscriptions, currentlyUpdating: currentlyUpdatingSubscription } = state.subscriptions;
+  const {
+    podcasts: subscriptions,
+    currentlyUpdating: currentlyUpdatingSubscription
+  } = state.subscriptions;
 
   if (selectedPodcast) {
     const subscribed = subscriptions.some(p => p.id === selectedPodcast.id);
     const mappedEpisodes = selectedPodcast.episodes.reduce((arr, episode) => {
       const inPlaylist = queue.some(e => e.id === episode.id);
       const updatingPlaylist = currentlyUpdating === episode.id;
-      arr.push({ ...episode, inPlaylist, updatingPlaylist });
+      arr.push({
+        ...episode,
+        artwork: selectedPodcast.artworkUrl600,
+        inPlaylist,
+        updatingPlaylist
+      });
       return arr;
     }, []);
 

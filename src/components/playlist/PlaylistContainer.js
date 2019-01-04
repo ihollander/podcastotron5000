@@ -8,11 +8,7 @@ import PlaylistList from "./PlaylistList";
 import NowPlaying from "./NowPlaying";
 
 class PlaylistContainer extends React.Component {
-  // Lifecycle Methods
-  componentDidMount() {
-    this.props.getPlaylists();
-  }
-
+  
   // Event Handlers
   onEpisodePlayClick = episodeId => this.props.updateNowPlaying(episodeId);
 

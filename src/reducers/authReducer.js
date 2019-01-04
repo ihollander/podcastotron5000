@@ -13,7 +13,6 @@ export default (state = INITIAL_STATE, action) => {
     case actionTypes.SIGNING_IN:
       return { ...state, loading: true };
     case actionTypes.LOGIN_ERROR:
-      console.log(action.payload)
       return { ...state, loading: false, error: action.payload };
     case actionTypes.SIGNED_IN:
       return {

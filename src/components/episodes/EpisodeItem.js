@@ -8,7 +8,7 @@ const EpisodeItem = ({
     title,
     pubDate,
     description,
-    podcast,
+    artwork,
     updatingPlaylist,
     inPlaylist
   },
@@ -40,7 +40,7 @@ const EpisodeItem = ({
     <Item>
       <Item.Image
         size="small"
-        src={podcast && podcast.artworkUrl600}
+        src={artwork}
         floated="left"
       />
       <Item.Content>

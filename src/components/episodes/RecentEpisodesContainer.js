@@ -9,6 +9,8 @@ import LoadingSpinner from "../LoadingSpinner";
 class RecentEpisodesContainer extends React.Component {
   // Lifecycle Methods
   componentDidMount() {
+    console.log('RecentEpisodesContainer componentDidMount')
+    // TODO: this can go away if you figure out how to update recent episodes from subscription create/remove actions
     this.props.getRecentEpisodes(this.props.page);
     window.addEventListener("scroll", this.onScroll, false);
   }
@@ -69,7 +71,12 @@ const mapStateToProps = state => {
   const mappedEpisodes = episodes.reduce((arr, episode) => {
     const inPlaylist = queue.some(e => e.id === episode.id);
     const updatingPlaylist = currentlyUpdating === episode.id;
-    arr.push({ ...episode, inPlaylist, updatingPlaylist });
+    arr.push({
+      ...episode,
+      artwork: episode.podcast.artworkUrl600,
+      inPlaylist,
+      updatingPlaylist
+    });
     return arr;
   }, []);
   return { episodes: mappedEpisodes, page, lastPage, loading };

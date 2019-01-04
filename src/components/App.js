@@ -2,6 +2,11 @@ import React from "react";
 import { Router, Switch } from "react-router-dom";
 import { connect } from "react-redux";
 
+import {
+  playlistActions,
+  subscriptionActions,
+  podcastActions
+} from "../actions";
 import history from "../history";
 
 import LoginLayoutRoute from "./routes/LoginLayoutRoute";
@@ -16,48 +21,73 @@ import EpisodeContainer from "./episodes/RecentEpisodesContainer";
 import PlaylistContainer from "./playlist/PlaylistContainer";
 import ScrollToTop from "./ScrollToTop";
 
-const App = ({ auth: { isSignedIn } }) => {
-  return (
-    <Router history={history}>
-      <ScrollToTop>
-        <Switch>
-          <LoginLayoutRoute exact path="/login" component={LoginContainer} />
-          <LoginLayoutRoute exact path="/signup" component={SignupContainer} />
-          <AuthenticatedLayoutRoute
-            isAuthenticated={isSignedIn}
-            exact
-            path="/"
-            component={SubscriptionContainer}
-          />
-          <AuthenticatedLayoutRoute
-            isAuthenticated={isSignedIn}
-            exact
-            path="/recent"
-            component={EpisodeContainer}
-          />
-          <AuthenticatedLayoutRoute
-            isAuthenticated={isSignedIn}
-            exact
-            path="/playlist"
-            component={PlaylistContainer}
-          />
-          <AuthenticatedLayoutRoute
-            isAuthenticated={isSignedIn}
-            exact
-            path="/podcasts/:id"
-            component={PodcastContainer}
-          />
-          <AuthenticatedLayoutRoute
-            isAuthenticated={isSignedIn}
-            exact
-            path="/search/:term"
-            component={SearchResultContainer}
-          />
-        </Switch>
-      </ScrollToTop>
-    </Router>
-  );
-};
+class App extends React.Component {
+  componentDidMount() {
+    if (this.props.auth.isSignedIn) {
+      console.log("App componentDidMount hydrating the store");
+      this.props.getPlaylists();
+      this.props.getSubscriptions();
+      // this.props.getRecentEpisodes(1);
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!prevProps.auth.isSignedIn && this.props.auth.isSignedIn) {
+      console.log("App componentDidUpdate hydrating the store");
+      this.props.getPlaylists();
+      this.props.getSubscriptions();
+      // this.props.getRecentEpisodes(1);
+    }
+  }
+
+  render() {
+    const { isSignedIn } = this.props.auth;
+    return (
+      <Router history={history}>
+        <ScrollToTop>
+          <Switch>
+            <LoginLayoutRoute exact path="/login" component={LoginContainer} />
+            <LoginLayoutRoute
+              exact
+              path="/signup"
+              component={SignupContainer}
+            />
+            <AuthenticatedLayoutRoute
+              isAuthenticated={isSignedIn}
+              exact
+              path="/"
+              component={SubscriptionContainer}
+            />
+            <AuthenticatedLayoutRoute
+              isAuthenticated={isSignedIn}
+              exact
+              path="/recent"
+              component={EpisodeContainer}
+            />
+            <AuthenticatedLayoutRoute
+              isAuthenticated={isSignedIn}
+              exact
+              path="/playlist"
+              component={PlaylistContainer}
+            />
+            <AuthenticatedLayoutRoute
+              isAuthenticated={isSignedIn}
+              exact
+              path="/podcasts/:id"
+              component={PodcastContainer}
+            />
+            <AuthenticatedLayoutRoute
+              isAuthenticated={isSignedIn}
+              exact
+              path="/search/:term"
+              component={SearchResultContainer}
+            />
+          </Switch>
+        </ScrollToTop>
+      </Router>
+    );
+  }
+}
 
 const mapStateToProps = state => {
   return {
@@ -65,4 +95,11 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(App);
+export default connect(
+  mapStateToProps,
+  {
+    getPlaylists: playlistActions.getAll,
+    getSubscriptions: subscriptionActions.getAll,
+    getRecentEpisodes: podcastActions.getRecentEpisodes
+  }
+)(App);

@@ -16,7 +16,7 @@ class SearchBar extends React.Component {
   render() {
     return (
       <form onSubmit={this.onFormSubmit}>
-        <Input icon="search" type="text" placeholder="Search..." value={this.state.term} onChange={this.onSearchChange} />
+        <Input icon="search" type="text" placeholder="Search podcasts..." value={this.state.term} onChange={this.onSearchChange} />
       </form>
     )
   }

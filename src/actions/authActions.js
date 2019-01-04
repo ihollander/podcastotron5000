@@ -1,69 +1,55 @@
-import types from "./types";
-import apiAdapter from "../apis/podcastApiAdapter";
+import { authTypes } from "../actionTypes/auth";
+import authService from "../services/authService"
 import history from "../history";
 
 const signUp = formData => {
-  return dispatch => {
-    dispatch({
-      type: types.SIGNING_IN
-    });
+  const request = () => ({ type: authTypes.SIGNING_IN });
+  const success = user => ({ type: authTypes.SIGNED_IN, payload: user });
+  const failure = error => ({ type: authTypes.LOGIN_ERROR, payload: error });
 
-    return apiAdapter
-      .userCreate({ user: formData })
-      .then(user => {
-        if (user.jwt) {
-          //success!
-          localStorage.setItem("user", JSON.stringify(user));
-          dispatch({
-            type: types.SIGNED_IN,
-            payload: user
-          });
-          history.push("/");
+  return dispatch => {
+    dispatch(request());
+
+    authService.signUp({user: formData})
+      .then(
+        user => {
+          dispatch(success(user))
+          history.push("/")
+        },
+        error => {
+          dispatch(failure(error))
         }
-      })
-      .catch(error => error.json())
-      .then(errorJson => {
-        dispatch({
-          type: types.LOGIN_ERROR,
-          payload: errorJson
-        });
-      });
+      )
   };
 };
 
 const signIn = formData => {
-  return dispatch => {
-    dispatch({
-      type: types.SIGNING_IN
-    });
+  const request = () => ({ type: authTypes.SIGNING_IN });
+  const success = user => ({ type: authTypes.SIGNED_IN, payload: user });
+  const failure = error => ({ type: authTypes.LOGIN_ERROR, payload: error });
 
-    return apiAdapter
-      .userSignIn({ user: formData })
-      .then(user => {
-        if (user.jwt) {
-          //success!
-          localStorage.setItem("user", JSON.stringify(user));
-          dispatch({
-            type: types.SIGNED_IN,
-            payload: user
-          });
-          history.push("/");
+  return dispatch => {
+    dispatch(request());
+
+    authService.login({user: formData})
+      .then(
+        user => {
+          console.log('success:', user)
+          dispatch(success(user))
+          history.push("/")
+        },
+        error => {
+          console.log('error:', error)
+          dispatch(failure(error))
         }
-      })
-      .catch(error => error.json())
-      .then(errorJson => {
-        dispatch({
-          type: types.LOGIN_ERROR,
-          payload: errorJson
-        });
-      });
+      )
   };
 };
 
 const signOut = () => {
-  localStorage.removeItem("user");
+  authService.logout()
   return {
-    type: types.SIGN_OUT
+    type: authTypes.SIGN_OUT
   };
 };
 

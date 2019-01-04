@@ -36,7 +36,7 @@ class PodcastItem extends React.Component {
           </Button>
         )}
         <Link to={`/podcasts/${slug}`} className="ui secondary button">
-          Episodes
+          Details
         </Link>
       </>
     );
