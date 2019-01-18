@@ -1,16 +1,25 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Grid, Divider, Button, Segment } from "semantic-ui-react";
+import { GoogleLogin } from 'react-google-login';
 
 import history from "../../history";
 import { authActions } from "../../actions";
+import config from '../../config.json';
 
 import LoginForm from "./LoginForm";
 import LoadingSpinner from "../LoadingSpinner";
 import MessageDisplay from "../Message";
 
-// temp auth handling: this should be moved to server side
 class LoginContainer extends React.Component {
+
+  // Lifecycle Methods
+  
+  googleResponse = response => {
+    console.log(response.tokenId)
+    this.props.googleAuth(response.tokenId)
+  }
+
   onSignUpClick = () => {
     history.push("/signup");
   };
@@ -28,6 +37,12 @@ class LoginContainer extends React.Component {
           <Grid columns={2} relaxed="very">
             <Grid.Column>
               <LoginForm onFormSubmit={this.onFormSubmit} />
+              {/* <GoogleLogin 
+                clientId={config["GOOGLE_CLIENT_ID"]}
+                buttonText="Login"
+                onSuccess={this.googleResponse}
+                onFailure={this.googleResponse}
+              /> */}
             </Grid.Column>
             <Grid.Column verticalAlign="middle">
               <Button
@@ -59,6 +74,7 @@ const mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   {
-    signIn: authActions.signIn
+    signIn: authActions.signIn,
+    googleAuth: authActions.googleAuth
   }
 )(LoginContainer);
